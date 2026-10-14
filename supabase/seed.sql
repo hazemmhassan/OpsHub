@@ -1,0 +1,1 @@
+-- Synthetic local seed data will be added with the first product schema.

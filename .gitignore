@@ -1,0 +1,6 @@
+/node_modules/
+/.next/
+
+# Local environment files can contain credentials.
+.env
+.env.local

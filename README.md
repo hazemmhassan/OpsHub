@@ -108,6 +108,29 @@ I am building this repository through small, reviewed commits. The first steps
 establish clear documentation and a reproducible foundation before feature
 implementation begins.
 
+## Local development
+
+The current foundation uses Node.js 24, npm 11, and Docker Desktop. Install the
+repository tooling and web application dependencies separately:
+
+```bash
+npm ci
+npm --prefix apps/web ci
+```
+
+Start Docker Desktop, then use the repository commands to manage and test the
+local database:
+
+```bash
+npm run db:start
+npm run db:status
+npm run db:test
+npm run db:stop
+```
+
+The local Supabase stack is for development only and must not be exposed as a
+production service.
+
 ## Project documents
 
 - [Core MVP specification](docs/product/mvp-spec.md)
