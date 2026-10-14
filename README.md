@@ -107,3 +107,9 @@ foundation is created.
 I am building this repository through small, reviewed commits. The first steps
 establish clear documentation and a reproducible foundation before feature
 implementation begins.
+
+## Project documents
+
+- [Core MVP specification](docs/product/mvp-spec.md)
+- [Bilingual flows and state machines](docs/architecture/phase-2a-flows-and-state-machines.md)
+- [Engineering design](docs/architecture/phase-2b-engineering-design.md)
