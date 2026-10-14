@@ -1,0 +1,30 @@
+{
+  "Metadata": {
+    "title": "OpsHub | Service request operations",
+    "description": "Receive, review and deliver service requests from one clear workspace."
+  },
+  "Common": {
+    "brand": "OpsHub",
+    "arabic": "العربية",
+    "english": "English",
+    "home": "Home",
+    "teamWorkspace": "Team workspace"
+  },
+  "PublicHome": {
+    "eyebrow": "Service requests, organized",
+    "title": "A clearer way to receive and manage client requests",
+    "description": "Give clients a simple way to ask for help, then keep every request visible from submission to delivery.",
+    "formNote": "Each team shares its own request form directly with clients.",
+    "staffAction": "Open the team workspace",
+    "benefit1": "Clear intake",
+    "benefit2": "Simple approvals",
+    "benefit3": "Reliable delivery"
+  },
+  "StaffHome": {
+    "eyebrow": "Team workspace",
+    "title": "Requests",
+    "description": "Review incoming requests and keep work moving.",
+    "emptyTitle": "No requests yet",
+    "emptyDescription": "New service requests will appear here."
+  }
+}
