@@ -5,11 +5,17 @@ App Router, TypeScript, Tailwind CSS, and ESLint.
 
 ## Local setup
 
+Use Node.js 24 and npm 11. The `.nvmrc` file records the required Node major
+version.
+
 Install the locked dependencies:
 
 ```bash
 npm ci
 ```
+
+Copy `.env.example` to `.env.local` when you need to override the safe local
+defaults. Environment values are validated when Next.js starts or builds.
 
 Start the development server:
 
@@ -23,6 +29,9 @@ Then open [http://localhost:3000](http://localhost:3000).
 
 ```bash
 npm run lint
+npm run typecheck
+npm test
+npm run format:check
 npm run build
 ```
 
