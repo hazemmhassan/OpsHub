@@ -1,16 +1,33 @@
 type StaffHomeProps = {
+  action: (formData: FormData) => Promise<void> | void;
   copy: {
     eyebrow: string;
     title: string;
     description: string;
     emptyTitle: string;
     emptyDescription: string;
+    organizationLabel: string;
+    roleLabel: string;
+    signOut: string;
   };
+  organizationName: string;
 };
 
-export function StaffHome({ copy }: StaffHomeProps) {
+export function StaffHome({ action, copy, organizationName }: StaffHomeProps) {
   return (
     <main className="staff-main">
+      <aside className="staff-session" aria-label={copy.organizationLabel}>
+        <div>
+          <span>{copy.organizationLabel}</span>
+          <strong>{organizationName}</strong>
+          <small>{copy.roleLabel}</small>
+        </div>
+        <form action={action}>
+          <button className="text-action" type="submit">
+            {copy.signOut}
+          </button>
+        </form>
+      </aside>
       <section className="staff-heading" aria-labelledby="staff-home-title">
         <div>
           <p className="eyebrow">{copy.eyebrow}</p>

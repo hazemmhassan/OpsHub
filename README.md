@@ -94,8 +94,8 @@ foundation is created.
 - [x] Define and validate the focused product scope
 - [x] Approve bilingual flows and state machines
 - [x] Approve schema, RLS, RPC, worker, webhook, and testing design
-- [ ] Create the reproducible project foundation
-- [ ] Implement authentication and tenant isolation
+- [x] Create the reproducible project foundation
+- [x] Implement authentication and tenant isolation
 - [ ] Implement request intake and staff review
 - [ ] Implement reliable n8n and Google Sheets delivery
 - [ ] Complete security, accessibility, and end to end verification
@@ -104,9 +104,10 @@ foundation is created.
 
 ## Current repository stage
 
-I am building this repository through small, reviewed commits. The first steps
-establish clear documentation and a reproducible foundation before feature
-implementation begins.
+I am building this repository through small, reviewed commits. The reproducible
+foundation, staff authentication, organization roles, and database-enforced
+tenant isolation are now implemented locally. Request intake and staff review
+are the next stage.
 
 ## Local development
 

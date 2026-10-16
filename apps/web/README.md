@@ -25,6 +25,14 @@ npm run dev
 
 Then open [http://localhost:3000](http://localhost:3000).
 
+## Local staff sign-in
+
+Use the public values shown by `supabase status` in `.env.local`. To create a
+local staff account, provide the local service role key and your own test email
+and password as temporary shell environment variables, then run
+`npm run staff:create:local`. The helper refuses non-local Supabase URLs and
+never prints the password.
+
 ## Checks
 
 ```bash

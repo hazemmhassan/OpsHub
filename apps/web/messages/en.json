@@ -25,6 +25,30 @@
     "title": "Requests",
     "description": "Review incoming requests and keep work moving.",
     "emptyTitle": "No requests yet",
-    "emptyDescription": "New service requests will appear here."
+    "emptyDescription": "New service requests will appear here.",
+    "organizationLabel": "Current team",
+    "signOut": "Sign out",
+    "roles": {
+      "admin": "Administrator",
+      "approver": "Approver"
+    }
+  },
+  "StaffAuth": {
+    "eyebrow": "Team workspace",
+    "title": "Welcome back",
+    "description": "Sign in to review requests and keep your team's work moving.",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "submit": "Sign in",
+    "submitting": "Signing in...",
+    "invalidInput": "Enter a valid email and password.",
+    "invalidCredentials": "The email or password is incorrect."
+  },
+  "StaffAccessDenied": {
+    "eyebrow": "Access check",
+    "title": "You do not have access yet",
+    "description": "Your account is valid, but it is not connected to an active team.",
+    "guidance": "Ask your team administrator to activate your access, then sign in again.",
+    "signOut": "Sign out"
   }
 }

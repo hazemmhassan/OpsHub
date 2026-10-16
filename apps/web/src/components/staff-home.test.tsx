@@ -9,15 +9,26 @@ const copy = {
   description: "Review incoming requests and keep work moving.",
   emptyTitle: "No requests yet",
   emptyDescription: "New service requests will appear here.",
+  organizationLabel: "Current team",
+  roleLabel: "Administrator",
+  signOut: "Sign out",
 };
 
 describe("StaffHome", () => {
   it("renders an accessible empty requests state", () => {
-    render(<StaffHome copy={copy} />);
+    render(
+      <StaffHome
+        action={() => undefined}
+        copy={copy}
+        organizationName="OpsHub Demo"
+      />,
+    );
 
     expect(
       screen.getByRole("heading", { level: 1, name: "Requests" }),
     ).toBeInTheDocument();
     expect(screen.getByText("No requests yet")).toBeInTheDocument();
+    expect(screen.getByText("OpsHub Demo")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Sign out" })).toBeEnabled();
   });
 });

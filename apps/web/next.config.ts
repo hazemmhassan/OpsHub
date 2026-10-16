@@ -6,6 +6,7 @@ import { env } from "./src/env";
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
+  agentRules: false,
   env: {
     NEXT_PUBLIC_APP_URL: env.NEXT_PUBLIC_APP_URL,
   },
