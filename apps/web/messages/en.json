@@ -15,6 +15,7 @@
     "title": "A clearer way to receive and manage client requests",
     "description": "Give clients a simple way to ask for help, then keep every request visible from submission to delivery.",
     "formNote": "Each team shares its own request form directly with clients.",
+    "requestAction": "Send a service request",
     "staffAction": "Open the team workspace",
     "benefit1": "Clear intake",
     "benefit2": "Simple approvals",

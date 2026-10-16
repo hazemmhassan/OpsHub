@@ -9,6 +9,7 @@ type PublicHomeProps = {
     title: string;
     description: string;
     formNote: string;
+    requestAction: string;
     staffAction: string;
     benefits: [string, string, string];
   };
@@ -23,11 +24,17 @@ export function PublicHome({ locale, copy }: PublicHomeProps) {
           <h1 id="public-home-title">{copy.title}</h1>
           <p className="hero-description">{copy.description}</p>
           <div className="hero-actions">
-            <Link className="primary-action" href={`/${locale}/staff`}>
+            <Link
+              className="primary-action"
+              href={`/${locale}/request/opshub-demo-request-form`}
+            >
+              {copy.requestAction}
+            </Link>
+            <Link className="secondary-action" href={`/${locale}/staff`}>
               {copy.staffAction}
             </Link>
-            <p className="form-note">{copy.formNote}</p>
           </div>
+          <p className="form-note">{copy.formNote}</p>
         </div>
 
         <ul className="benefit-grid" aria-label={copy.eyebrow}>

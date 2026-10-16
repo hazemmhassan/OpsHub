@@ -43,6 +43,7 @@ export default async function HomePage({ params }: HomePageProps) {
           title: home("title"),
           description: home("description"),
           formNote: home("formNote"),
+          requestAction: home("requestAction"),
           staffAction: home("staffAction"),
           benefits: [home("benefit1"), home("benefit2"), home("benefit3")],
         }}

@@ -214,10 +214,156 @@ h2 {
 
 .form-note {
   max-inline-size: 20rem;
-  margin: 0;
+  margin-block: 1rem 0;
   color: var(--muted);
   font-size: 0.82rem;
   line-height: 1.6;
+}
+
+.request-form-shell,
+.confirmation-main {
+  inline-size: min(100% - 2rem, 48rem);
+  margin-inline: auto;
+  padding-block: clamp(2rem, 6vw, 5rem);
+}
+
+.request-form,
+.confirmation-card {
+  display: grid;
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  border: 1px solid var(--line);
+  border-radius: 1.35rem;
+  background: var(--surface);
+  box-shadow: 0 1.5rem 4rem rgb(23 32 30 / 7%);
+  gap: 1rem;
+}
+
+.request-form header {
+  margin-block-end: 1rem;
+}
+
+.request-form h1,
+.confirmation-card h1 {
+  font-size: clamp(2rem, 7vw, 3.75rem);
+}
+
+.request-form header > p:last-child,
+.confirmation-card > p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.request-form label,
+.request-form fieldset {
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.request-form label:not(.consent) {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.request-form input:not([type="radio"]):not([type="checkbox"]),
+.request-form select,
+.request-form textarea {
+  inline-size: 100%;
+  min-block-size: 3.1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 400;
+}
+
+.request-form textarea {
+  min-block-size: 9rem;
+  resize: vertical;
+}
+
+.request-form fieldset {
+  display: flex;
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  gap: 1.5rem;
+}
+
+.request-form fieldset label,
+.consent {
+  display: flex;
+  align-items: start;
+  gap: 0.55rem;
+}
+
+.company-fields {
+  display: grid;
+  padding: 1rem;
+  border-inline-start: 3px solid var(--accent);
+  gap: 1rem;
+}
+
+.request-form small {
+  margin-block-start: -0.55rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.request-form .primary-action {
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.form-error {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border-radius: 0.75rem;
+  background: #fff0ed;
+  color: #8a2f22;
+  line-height: 1.5;
+}
+
+.honeypot {
+  position: absolute !important;
+  inline-size: 1px !important;
+  block-size: 1px !important;
+  overflow: hidden !important;
+  clip-path: inset(50%) !important;
+}
+
+.confirmation-main {
+  display: grid;
+  place-items: center;
+  min-block-size: 100vh;
+}
+
+.confirmation-card {
+  inline-size: 100%;
+  text-align: center;
+}
+
+.reference-card {
+  display: grid;
+  padding: 1.25rem;
+  border-radius: 0.9rem;
+  background: rgb(11 102 85 / 8%);
+  gap: 0.35rem;
+}
+
+.reference-card span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.reference-card strong {
+  color: var(--brand);
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  letter-spacing: 0.12em;
 }
 
 .benefit-grid {
@@ -506,7 +652,9 @@ h2 {
 @media (max-width: 42rem) {
   .header-inner,
   .public-main,
-  .staff-main {
+  .staff-main,
+  .request-form-shell,
+  .confirmation-main {
     inline-size: min(100% - 1.25rem, 72rem);
   }
 
@@ -536,6 +684,12 @@ h2 {
 
   .primary-action {
     inline-size: 100%;
+  }
+
+  .hero-actions .secondary-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .form-note {
