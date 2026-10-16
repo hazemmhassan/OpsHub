@@ -14,8 +14,10 @@ Install the locked dependencies:
 npm ci
 ```
 
-Copy `.env.example` to `.env.local` when you need to override the safe local
-defaults. Environment values are validated when Next.js starts or builds.
+Copy `.env.example` to `.env.local`. Add the public local values shown by
+`supabase status`, the local Supabase secret key, and a random value of at least
+32 characters for `PUBLIC_SUBMISSION_RATE_LIMIT_KEY`. The two private values
+must stay server-only and must never use a `NEXT_PUBLIC_` prefix.
 
 Start the development server:
 
@@ -24,6 +26,10 @@ npm run dev
 ```
 
 Then open [http://localhost:3000](http://localhost:3000).
+
+The demo public form is available at
+[http://localhost:3000/en/request/opshub-demo-request-form](http://localhost:3000/en/request/opshub-demo-request-form)
+and has an Arabic version under `/ar`.
 
 ## Local staff sign-in
 

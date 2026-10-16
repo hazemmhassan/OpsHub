@@ -11,7 +11,8 @@ problems and aims to make the whole process easier to manage and trust.
 
 OpsHub is currently in active development. The product and engineering design
 are approved, and the application is being built step by step. The features
-below describe the planned first release unless they are marked as completed.
+below describe the first release. The request and review workflow is now
+implemented locally, while reliable external delivery is the next stage.
 
 ## What I want OpsHub to solve
 
@@ -72,8 +73,7 @@ and AI assisted intake are planned for later stages.
 | Testing | Vitest, React Testing Library, Playwright, Supabase database tests |
 | Later AI module | FastAPI, Pydantic, evaluated bilingual RAG intake |
 
-Exact package versions will be selected and recorded when the project
-foundation is created.
+Exact package versions are locked in the repository manifests.
 
 ## How I am building it
 
@@ -96,7 +96,7 @@ foundation is created.
 - [x] Approve schema, RLS, RPC, worker, webhook, and testing design
 - [x] Create the reproducible project foundation
 - [x] Implement authentication and tenant isolation
-- [ ] Implement request intake and staff review
+- [x] Implement request intake and staff review
 - [ ] Implement reliable n8n and Google Sheets delivery
 - [ ] Complete security, accessibility, and end to end verification
 - [ ] Add and evaluate the optional bilingual AI intake module
@@ -105,9 +105,15 @@ foundation is created.
 ## Current repository stage
 
 I am building this repository through small, reviewed commits. The reproducible
-foundation, staff authentication, organization roles, and database-enforced
-tenant isolation are now implemented locally. Request intake and staff review
-are the next stage.
+foundation, staff authentication, organization roles, tenant isolation,
+bilingual public intake, and the staff review and decision flow are implemented
+locally. The next stage is the reliable delivery worker and the n8n and Google
+Sheets integration.
+
+The current automated checkpoint passes 131 database assertions and 29 web
+tests, together with database linting, TypeScript, ESLint, formatting, and the
+production build. Browser-based end to end review is the next verification
+checkpoint before anything is pushed.
 
 ## Local development
 
