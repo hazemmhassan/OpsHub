@@ -19,6 +19,10 @@ values (
   'consent-en-v1'
 );
 
+delete from public.webhook_endpoints
+where org_id = '00000000-0000-4000-8000-000000000001'
+  and destination_type = 'n8n_google_sheets';
+
 insert into public.webhook_endpoints (
   id,
   org_id,
