@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { parseSignInInput } from "./sign-in";
+import { classifySignInError, parseSignInInput } from "./sign-in";
 
 describe("parseSignInInput", () => {
   it("normalizes the email and accepts a non-empty password", () => {
@@ -21,5 +21,14 @@ describe("parseSignInInput", () => {
     expect(() =>
       parseSignInInput({ email: "invalid", password: "", locale: "fr" }),
     ).toThrow();
+  });
+
+  it("distinguishes an unavailable auth service from bad credentials", () => {
+    expect(
+      classifySignInError({ name: "AuthRetryableFetchError", status: 0 }),
+    ).toBe("service-unavailable");
+    expect(classifySignInError({ name: "AuthApiError", status: 400 })).toBe(
+      "invalid-credentials",
+    );
   });
 });

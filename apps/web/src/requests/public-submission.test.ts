@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  classifyPublicFormLookup,
   createSubmissionSubjectHash,
   getOrganizationDate,
 } from "./public-submission";
@@ -28,6 +29,16 @@ describe("public submission helpers", () => {
         "127.0.0.1",
         "a-secure-development-key-with-32-characters",
       ),
+    );
+  });
+
+  it("distinguishes a service outage from a missing public form", () => {
+    expect(classifyPublicFormLookup(null, { message: "fetch failed" })).toBe(
+      "service-unavailable",
+    );
+    expect(classifyPublicFormLookup(null, null)).toBe("not-found");
+    expect(classifyPublicFormLookup({ publicId: "request-form" }, null)).toBe(
+      "available",
     );
   });
 });

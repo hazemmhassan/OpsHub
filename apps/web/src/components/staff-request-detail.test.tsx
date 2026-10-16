@@ -55,6 +55,12 @@ describe("StaffRequestDetail", () => {
       screen.getByRole("heading", { name: "Operations team training" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Mona Company")).toBeInTheDocument();
+    expect(screen.getByText("Company")).toBeInTheDocument();
+    expect(screen.getByText("Saudi Arabia")).toBeInTheDocument();
+    expect(screen.getByText("Training")).toBeInTheDocument();
+    expect(screen.getByText("Arabic")).toBeInTheDocument();
+    expect(screen.getAllByText("Phone")).toHaveLength(2);
+    expect(screen.queryByText("company")).not.toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Approve request" }),
     ).toBeEnabled();

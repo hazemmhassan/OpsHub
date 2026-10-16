@@ -36,6 +36,25 @@ describe("parseRequestInput", () => {
     });
   });
 
+  it("accepts omitted company fields from an individual browser form", () => {
+    expect(
+      parseRequestInput(
+        {
+          ...validInput,
+          companyName: null,
+          jobTitle: null,
+          companyWebsite: null,
+        },
+        "2026-10-16",
+      ),
+    ).toMatchObject({
+      requesterType: "individual",
+      companyName: null,
+      jobTitle: null,
+      companyWebsite: null,
+    });
+  });
+
   it("adds HTTPS to a company website that has no scheme", () => {
     expect(
       parseRequestInput(

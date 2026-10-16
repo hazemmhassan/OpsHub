@@ -110,10 +110,37 @@ bilingual public intake, and the staff review and decision flow are implemented
 locally. The next stage is the reliable delivery worker and the n8n and Google
 Sheets integration.
 
-The current automated checkpoint passes 131 database assertions and 29 web
-tests, together with database linting, TypeScript, ESLint, formatting, and the
-production build. Browser-based end to end review is the next verification
-checkpoint before anything is pushed.
+The current acceptance checkpoint passes 132 database assertions and 37 web
+tests, together with database linting, TypeScript, ESLint, formatting, dependency
+audits, and the production build. The complete Phase 5 workflow has also been
+exercised in a real browser in both languages, including approval, rejection,
+rate limiting, honeypot protection, and concurrent submissions and decisions.
+The detailed evidence is recorded in the Phase 5 testing checklist.
+
+## Implemented now
+
+The current local application includes:
+
+- A public Arabic and English service request form
+- Individual and company branches with company-only fields
+- Unicode names, Arabic-Indic phone digits, country-aware phone normalization,
+  safe website normalization, date rules, consent capture, and server validation
+- Random non-sequential request references and idempotent double-submit handling
+- Honeypot protection and a limit of five submission attempts per form and
+  network subject every 15 minutes
+- Staff sign-in with administrator and approver roles
+- An organization-scoped request list with search and status filters
+- Request details using the immutable submitted snapshot
+- The required `submitted -> under_review -> approved | rejected` workflow
+- Idempotent Start Review and first-final-decision-wins behavior
+- A visible non-blocking warning when phone and country appear inconsistent
+- An explicit confirmation step before a request is approved
+- Required rejection reasons and a read-only activity timeline
+- Atomic creation of a pending integration delivery after approval
+- PostgreSQL constraints and Row Level Security that isolate organizations
+
+The delivery worker, n8n workflow, Google Sheets upsert, delivery retries, and
+manual retry interface are not implemented yet. They belong to the next phase.
 
 ## Local development
 
@@ -143,3 +170,4 @@ production service.
 - [Core MVP specification](docs/product/mvp-spec.md)
 - [Bilingual flows and state machines](docs/architecture/phase-2a-flows-and-state-machines.md)
 - [Engineering design](docs/architecture/phase-2b-engineering-design.md)
+- [Phase 5 manual testing checklist](docs/testing/phase-5-manual-test-checklist.md)

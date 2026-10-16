@@ -339,6 +339,36 @@ h2 {
   line-height: 1.5;
 }
 
+.form-warning {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid #e5c76b;
+  border-radius: 0.75rem;
+  background: #fff8dc;
+  color: #684f08;
+  line-height: 1.5;
+}
+
+.approval-confirmation {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: var(--surface);
+}
+
+.approval-confirmation p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.approval-confirmation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 .honeypot {
   position: absolute !important;
   inline-size: 1px !important;

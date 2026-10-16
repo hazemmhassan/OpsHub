@@ -6,7 +6,8 @@ import { useFormStatus } from "react-dom";
 import type { AppLocale } from "@/i18n/locale";
 
 export type SignInState = {
-  status: "idle" | "invalid-input" | "invalid-credentials";
+  status:
+    "idle" | "invalid-input" | "invalid-credentials" | "service-unavailable";
 };
 
 type StaffSignInProps = {
@@ -21,6 +22,7 @@ type StaffSignInProps = {
     submitting: string;
     invalidInput?: string;
     invalidCredentials: string;
+    serviceUnavailable: string;
   };
   initialState: SignInState;
   locale: AppLocale;
@@ -51,11 +53,13 @@ export function StaffSignIn({
 }: StaffSignInProps) {
   const [state, formAction] = useActionState(action, initialState);
   const errorMessage =
-    state.status === "invalid-credentials"
-      ? copy.invalidCredentials
-      : state.status === "invalid-input"
-        ? (copy.invalidInput ?? copy.invalidCredentials)
-        : null;
+    state.status === "service-unavailable"
+      ? copy.serviceUnavailable
+      : state.status === "invalid-credentials"
+        ? copy.invalidCredentials
+        : state.status === "invalid-input"
+          ? (copy.invalidInput ?? copy.invalidCredentials)
+          : null;
 
   return (
     <main className="auth-main">

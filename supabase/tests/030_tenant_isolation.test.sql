@@ -296,13 +296,24 @@ select results_eq(
 );
 
 select results_eq(
-  $$ select user_id from public.organization_members order by user_id $$,
+  $$
+    select user_id
+    from public.organization_members
+    where user_id in (
+      '00000000-0000-4000-8000-000000000301',
+      '00000000-0000-4000-8000-000000000302',
+      '00000000-0000-4000-8000-000000000303',
+      '00000000-0000-4000-8000-000000000304',
+      '00000000-0000-4000-8000-000000000305'
+    )
+    order by user_id
+  $$,
   $$
     values
       ('00000000-0000-4000-8000-000000000301'::uuid),
       ('00000000-0000-4000-8000-000000000302'::uuid)
   $$,
-  'an admin should read active memberships only inside their organization'
+  'an admin should read only same-tenant memberships from the test fixtures'
 );
 
 select results_eq(

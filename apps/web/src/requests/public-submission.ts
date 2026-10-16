@@ -1,5 +1,16 @@
 import { createHmac } from "node:crypto";
 
+export function classifyPublicFormLookup(
+  data: unknown,
+  error: unknown,
+): "available" | "not-found" | "service-unavailable" {
+  if (error) {
+    return "service-unavailable";
+  }
+
+  return data ? "available" : "not-found";
+}
+
 export function getOrganizationDate(
   timezone: string,
   now = new Date(),

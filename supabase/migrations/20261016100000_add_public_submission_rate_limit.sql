@@ -16,6 +16,7 @@ create table private.public_submission_rate_limits (
 create index public_submission_rate_limits_updated_idx
   on private.public_submission_rate_limits (updated_at);
 
+grant usage on schema private to service_role;
 revoke all on table private.public_submission_rate_limits
   from public, anon, authenticated;
 grant select, insert, update, delete

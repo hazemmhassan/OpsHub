@@ -7,7 +7,10 @@ import arCountries from "i18n-iso-countries/langs/ar.json";
 import enCountries from "i18n-iso-countries/langs/en.json";
 
 import type { AppLocale } from "@/i18n/locale";
-import { parseRequestInput } from "@/requests/request-input";
+import {
+  getPhoneCountryMismatch,
+  parseRequestInput,
+} from "@/requests/request-input";
 
 countries.registerLocale(arCountries);
 countries.registerLocale(enCountries);
@@ -38,6 +41,7 @@ const text = {
       "Do not include passwords, payment details, or other sensitive data.",
     date: "Desired start date",
     method: "Preferred contact method",
+    noPreference: "No preference",
     companyName: "Company name",
     jobTitle: "Job title (optional)",
     website: "Company website (optional)",
@@ -45,6 +49,8 @@ const text = {
       "I agree that the team may use these details to respond to my request.",
     submit: "Send request",
     invalid: "Please review the highlighted information and try again.",
+    phoneMismatch:
+      "The phone number appears to belong to a different country. You can still send the request if the details are correct.",
   },
   ar: {
     title: "أخبرنا بما تحتاج إليه",
@@ -61,12 +67,15 @@ const text = {
     sensitive: "لا تذكر كلمات مرور أو بيانات دفع أو معلومات حساسة أخرى.",
     date: "تاريخ البدء المطلوب",
     method: "طريقة التواصل المفضلة",
+    noPreference: "بدون تفضيل",
     companyName: "اسم الشركة",
     jobTitle: "المسمى الوظيفي (اختياري)",
     website: "الموقع الإلكتروني للشركة (اختياري)",
     consent: "أوافق على استخدام هذه البيانات للرد على طلبي.",
     submit: "إرسال الطلب",
     invalid: "راجع البيانات وحاول مرة أخرى.",
+    phoneMismatch:
+      "يبدو أن رقم الهاتف تابع لدولة مختلفة. يمكنك إرسال الطلب إذا كانت البيانات صحيحة.",
   },
 } as const;
 
@@ -92,6 +101,8 @@ export function PublicRequestForm({
     "individual",
   );
   const [error, setError] = useState<string | null>(null);
+  const [phone, setPhone] = useState("");
+  const [countryCode, setCountryCode] = useState("EG");
   const [idempotencyKey] = useState(() => crypto.randomUUID());
   const names = countries.getNames(locale, { select: "official" });
   const priority = new Map(
@@ -149,6 +160,15 @@ export function PublicRequestForm({
             {error ?? serverError}
           </p>
         ) : null}
+        {getPhoneCountryMismatch(phone, countryCode) ? (
+          <p
+            aria-label={copy.phoneMismatch}
+            className="form-warning"
+            role="status"
+          >
+            {copy.phoneMismatch}
+          </p>
+        ) : null}
         <input name="publicId" type="hidden" value={publicId} />
         <input name="locale" type="hidden" value={locale} />
         <input name="consentTextVersion" type="hidden" value={consentVersion} />
@@ -194,11 +214,24 @@ export function PublicRequestForm({
         </label>
         <label>
           {copy.phone}
-          <input name="phone" type="tel" required maxLength={64} dir="ltr" />
+          <input
+            dir="ltr"
+            maxLength={64}
+            name="phone"
+            onChange={(event) => setPhone(event.target.value)}
+            required
+            type="tel"
+            value={phone}
+          />
         </label>
         <label>
           {copy.country}
-          <select name="countryCode" required defaultValue="EG">
+          <select
+            name="countryCode"
+            onChange={(event) => setCountryCode(event.target.value)}
+            required
+            value={countryCode}
+          >
             {countryOptions.map(([code, name]) => (
               <option key={code} value={code}>
                 {name}
@@ -236,7 +269,7 @@ export function PublicRequestForm({
         <label>
           {copy.method}
           <select name="preferredContactMethod" defaultValue="">
-            <option value="">{copy.email}</option>
+            <option value="">{copy.noPreference}</option>
             <option value="email">{copy.email}</option>
             <option value="phone">{copy.phone}</option>
           </select>

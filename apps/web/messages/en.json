@@ -43,7 +43,8 @@
     "submit": "Sign in",
     "submitting": "Signing in...",
     "invalidInput": "Enter a valid email and password.",
-    "invalidCredentials": "The email or password is incorrect."
+    "invalidCredentials": "The email or password is incorrect.",
+    "serviceUnavailable": "Sign-in is temporarily unavailable. Please try again shortly."
   },
   "StaffAccessDenied": {
     "eyebrow": "Access check",

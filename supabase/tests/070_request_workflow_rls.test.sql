@@ -26,10 +26,6 @@ values
     'workflow-tenant-b-form', 1, 'consent-ar-v1', 'consent-en-v1'
   );
 
-delete from public.webhook_endpoints
-where org_id = '00000000-0000-4000-8000-000000000001'
-  and destination_type = 'n8n_google_sheets';
-
 insert into public.webhook_endpoints (
   id, org_id, name, destination_type, url, signing_secret_ref
 )
@@ -40,7 +36,12 @@ values (
   'n8n_google_sheets',
   'http://n8n:5678/webhook/workflow-rls',
   'WORKFLOW_RLS_SECRET'
-);
+)
+on conflict (org_id, destination_type) do update set
+  name = excluded.name,
+  url = excluded.url,
+  signing_secret_ref = excluded.signing_secret_ref,
+  is_active = true;
 
 insert into auth.users (
   id, aud, role, email, encrypted_password, email_confirmed_at,
@@ -148,14 +149,31 @@ select set_config(
   true
 );
 
-select is((select count(*)::integer from public.requests), 1,
-  'an approver should see only requests in their organization');
-select is((select count(*)::integer from public.request_submission_snapshots), 1,
-  'an approver should see only snapshots in their organization');
-select is((select count(*)::integer from public.approval_decisions), 1,
-  'an approver should see decisions in their organization');
-select is((select count(*)::integer from public.audit_events), 4,
-  'an approver should see the complete request timeline in their organization');
+select is((
+  select count(*)::integer from public.requests
+  where idempotency_key = '00000000-0000-4000-8000-000000000711'
+), 1, 'an approver should see their organization request fixture');
+select is((
+  select count(*)::integer from public.request_submission_snapshots
+  where request_id = (
+    select id from public.requests
+    where idempotency_key = '00000000-0000-4000-8000-000000000711'
+  )
+), 1, 'an approver should see their organization snapshot fixture');
+select is((
+  select count(*)::integer from public.approval_decisions
+  where request_id = (
+    select id from public.requests
+    where idempotency_key = '00000000-0000-4000-8000-000000000711'
+  )
+), 1, 'an approver should see their organization decision fixture');
+select is((
+  select count(*)::integer from public.audit_events
+  where request_id = (
+    select id from public.requests
+    where idempotency_key = '00000000-0000-4000-8000-000000000711'
+  )
+), 4, 'an approver should see the complete fixture request timeline');
 select is((select count(*)::integer from public.integration_deliveries), 0,
   'an approver should not see integration delivery internals');
 
@@ -164,8 +182,13 @@ select set_config(
   '{"sub":"00000000-0000-4000-8000-000000000702","role":"authenticated"}',
   true
 );
-select is((select count(*)::integer from public.integration_deliveries), 1,
-  'an administrator should see integration deliveries in their organization');
+select is((
+  select count(*)::integer from public.integration_deliveries
+  where request_id = (
+    select id from public.requests
+    where idempotency_key = '00000000-0000-4000-8000-000000000711'
+  )
+), 1, 'an administrator should see their organization delivery fixture');
 
 select set_config(
   'request.jwt.claims',

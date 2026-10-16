@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import type { AppLocale } from "@/i18n/locale";
 
+import { ApprovalConfirmation } from "./approval-confirmation";
+
 export type StaffRequestDetailRecord = {
   id: string;
   reference: string;
@@ -148,6 +150,35 @@ const eventLabels = {
   },
 } as const;
 
+const valueLabels = {
+  en: {
+    requesterType: { individual: "Individual", company: "Company" },
+    serviceCategory: {
+      consulting: "Consulting",
+      it_software: "IT and software",
+      marketing: "Marketing",
+      training: "Training",
+      support_maintenance: "Support and maintenance",
+      other: "Other",
+    },
+    language: { ar: "Arabic", en: "English" },
+    contactMethod: { email: "Email", phone: "Phone" },
+  },
+  ar: {
+    requesterType: { individual: "فرد", company: "شركة" },
+    serviceCategory: {
+      consulting: "استشارات",
+      it_software: "تقنية المعلومات والبرمجيات",
+      marketing: "تسويق",
+      training: "تدريب",
+      support_maintenance: "دعم وصيانة",
+      other: "أخرى",
+    },
+    language: { ar: "العربية", en: "الإنجليزية" },
+    contactMethod: { email: "البريد الإلكتروني", phone: "رقم الهاتف" },
+  },
+} as const;
+
 function formatDate(value: string, locale: AppLocale) {
   return new Intl.DateTimeFormat(locale === "ar" ? "ar-EG" : "en-GB", {
     dateStyle: "medium",
@@ -169,18 +200,45 @@ export function StaffRequestDetail({
     statusLabels[locale][
       request.status as keyof (typeof statusLabels)[typeof locale]
     ];
+  const values = valueLabels[locale];
+  const country =
+    new Intl.DisplayNames([locale], { type: "region" }).of(
+      request.countryCode,
+    ) ?? request.countryCode;
   const fields = [
     [copy.reference, request.reference],
     [copy.submitted, formatDate(request.submittedAt, locale)],
-    [copy.requesterType, request.requesterType],
+    [
+      copy.requesterType,
+      values.requesterType[
+        request.requesterType as keyof typeof values.requesterType
+      ] ?? request.requesterType,
+    ],
     [copy.contact, request.contactName],
     [copy.email, request.email],
     [copy.phone, `${request.phoneRaw} (${request.phoneE164})`],
-    [copy.country, request.countryCode],
-    [copy.category, request.serviceCategory],
-    [copy.language, request.submittedLocale],
+    [copy.country, country],
+    [
+      copy.category,
+      values.serviceCategory[
+        request.serviceCategory as keyof typeof values.serviceCategory
+      ] ?? request.serviceCategory,
+    ],
+    [
+      copy.language,
+      values.language[
+        request.submittedLocale as keyof typeof values.language
+      ] ?? request.submittedLocale,
+    ],
     [copy.startDate, request.desiredStartDate],
-    [copy.method, request.preferredContactMethod],
+    [
+      copy.method,
+      request.preferredContactMethod
+        ? (values.contactMethod[
+            request.preferredContactMethod as keyof typeof values.contactMethod
+          ] ?? request.preferredContactMethod)
+        : null,
+    ],
     [copy.company, request.companyName],
     [copy.jobTitle, request.jobTitle],
     [copy.website, request.companyWebsite],
@@ -233,9 +291,7 @@ export function StaffRequestDetail({
           <div className="decision-actions">
             <form action={decideAction}>
               <input name="decision" type="hidden" value="approved" />
-              <button className="primary-action" type="submit">
-                {copy.approve}
-              </button>
+              <ApprovalConfirmation locale={locale} />
             </form>
             <form action={decideAction} className="reject-form">
               <input name="decision" type="hidden" value="rejected" />

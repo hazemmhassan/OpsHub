@@ -12,6 +12,7 @@ const copy = {
   submit: "Sign in",
   submitting: "Signing in...",
   invalidCredentials: "The email or password is incorrect.",
+  serviceUnavailable: "Sign-in is temporarily unavailable. Please try again.",
 };
 
 describe("StaffSignIn", () => {
@@ -46,6 +47,21 @@ describe("StaffSignIn", () => {
 
     expect(screen.getByRole("alert")).toHaveTextContent(
       "The email or password is incorrect.",
+    );
+  });
+
+  it("announces an authentication service outage separately", () => {
+    render(
+      <StaffSignIn
+        action={vi.fn()}
+        copy={copy}
+        initialState={{ status: "service-unavailable" }}
+        locale="en"
+      />,
+    );
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Sign-in is temporarily unavailable. Please try again.",
     );
   });
 });

@@ -72,6 +72,7 @@ async function SignInPageContent({ params }: SignInPageProps) {
           submitting: auth("submitting"),
           invalidInput: auth("invalidInput"),
           invalidCredentials: auth("invalidCredentials"),
+          serviceUnavailable: auth("serviceUnavailable"),
         }}
         initialState={{ status: "idle" }}
         locale={locale}

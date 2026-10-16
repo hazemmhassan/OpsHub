@@ -1,6 +1,6 @@
 begin;
 
-select plan(8);
+select plan(9);
 
 insert into public.public_forms (
   id,
@@ -49,6 +49,11 @@ select ok(
     'execute'
   ),
   'only the trusted server role should consume the submission budget'
+);
+
+select ok(
+  has_schema_privilege('service_role', 'private', 'usage'),
+  'the trusted server role should access the private rate-limit table'
 );
 
 select ok(

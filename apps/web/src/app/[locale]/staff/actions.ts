@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 
 import { decideStaffAccess } from "@/auth/staff-access";
-import { safelyParseSignInInput } from "@/auth/sign-in";
+import { classifySignInError, safelyParseSignInInput } from "@/auth/sign-in";
 import type { SignInState } from "@/components/staff-sign-in";
 import { locales, type AppLocale } from "@/i18n/locale";
 import { createClient } from "@/lib/supabase/server";
@@ -33,7 +33,9 @@ export async function signIn(
   });
 
   if (signInError) {
-    return { status: "invalid-credentials" };
+    return {
+      status: classifySignInError(signInError) ?? "invalid-credentials",
+    };
   }
 
   const { data: claimsData, error: claimsError } =
@@ -42,6 +44,11 @@ export async function signIn(
     !claimsError && typeof claimsData?.claims?.sub === "string"
       ? claimsData.claims.sub
       : null;
+
+  if (claimsError) {
+    await supabase.auth.signOut();
+    return { status: "service-unavailable" };
+  }
 
   if (!userId) {
     await supabase.auth.signOut();
@@ -58,7 +65,7 @@ export async function signIn(
 
   if (membershipError) {
     await supabase.auth.signOut();
-    return { status: "invalid-credentials" };
+    return { status: "service-unavailable" };
   }
 
   const access = decideStaffAccess(userId, data ?? []);

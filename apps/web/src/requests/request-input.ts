@@ -34,9 +34,18 @@ const requestInputSchema = z.object({
   submittedLocale: z.enum(["ar", "en"]),
   consentTextVersion: z.string().min(1).max(80),
   consent: z.literal(true),
-  companyName: z.string().max(160).optional().or(z.literal("")),
-  jobTitle: z.string().max(120).optional().or(z.literal("")),
-  companyWebsite: z.string().max(2048).optional().or(z.literal("")),
+  companyName: z.preprocess(
+    (value) => (value === null ? undefined : value),
+    z.string().max(160).optional(),
+  ),
+  jobTitle: z.preprocess(
+    (value) => (value === null ? undefined : value),
+    z.string().max(120).optional(),
+  ),
+  companyWebsite: z.preprocess(
+    (value) => (value === null ? undefined : value),
+    z.string().max(2048).optional(),
+  ),
 });
 
 function collapseWhitespace(value: string) {
@@ -49,6 +58,22 @@ function normalizeDigits(value: string) {
     const zero = code >= 0x06f0 ? 0x06f0 : 0x0660;
     return String(code - zero);
   });
+}
+
+export function getPhoneCountryMismatch(
+  phoneInput: string,
+  countryCode: string,
+) {
+  if (!/^[A-Z]{2}$/u.test(countryCode)) return false;
+
+  const phone = parsePhoneNumberFromString(
+    normalizeDigits(phoneInput.trim()),
+    countryCode as CountryCode,
+  );
+
+  return Boolean(
+    phone?.isValid() && phone.country && phone.country !== countryCode,
+  );
 }
 
 function normalizeWebsite(value: string | undefined) {
@@ -99,9 +124,7 @@ export function parseRequestInput(input: unknown, organizationDate: string) {
     phoneRaw,
     phoneE164: phone.number,
     countryCode: source.countryCode,
-    phoneCountryMismatch: Boolean(
-      phone.country && phone.country !== source.countryCode,
-    ),
+    phoneCountryMismatch: getPhoneCountryMismatch(phoneRaw, source.countryCode),
     serviceCategory: source.serviceCategory,
     requestTitle: source.requestTitle.trim(),
     description: source.description.trim(),

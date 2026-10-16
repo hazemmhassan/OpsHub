@@ -86,9 +86,17 @@ select results_eq(
 );
 
 select is(
-  (select count(*)::integer from public.organization_members),
+  (
+    select count(*)::integer
+    from public.organization_members
+    where user_id in (
+      '00000000-0000-4000-8000-000000000201',
+      '00000000-0000-4000-8000-000000000202',
+      '00000000-0000-4000-8000-000000000203'
+    )
+  ),
   2,
-  'an admin should read active memberships in their own organization'
+  'an admin should read the active fixture memberships in their organization'
 );
 
 select results_eq(

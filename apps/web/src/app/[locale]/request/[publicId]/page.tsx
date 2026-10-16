@@ -6,10 +6,14 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { PublicRequestForm } from "@/components/public-request-form";
+import { PublicRequestUnavailable } from "@/components/public-request-unavailable";
 import { SiteHeader } from "@/components/site-header";
 import { routing } from "@/i18n/routing";
 import { createServiceClient } from "@/lib/supabase/service";
-import { getOrganizationDate } from "@/requests/public-submission";
+import {
+  classifyPublicFormLookup,
+  getOrganizationDate,
+} from "@/requests/public-submission";
 
 import { submitPublicRequest } from "./actions";
 
@@ -79,7 +83,34 @@ async function RequestPageContent({ params, searchParams }: RequestPageProps) {
     .eq("is_active", true)
     .maybeSingle();
 
-  if (error || !data) {
+  const availability = classifyPublicFormLookup(data, error);
+
+  setRequestLocale(locale);
+  const common = await getTranslations("Common");
+
+  if (availability === "service-unavailable" || availability === "not-found") {
+    return (
+      <div className="page-shell">
+        <SiteHeader
+          area="public"
+          locale={locale}
+          labels={{
+            brand: common("brand"),
+            home: common("home"),
+            teamWorkspace: common("teamWorkspace"),
+            languages: { ar: common("arabic"), en: common("english") },
+          }}
+        />
+        <PublicRequestUnavailable
+          locale={locale}
+          publicId={publicId}
+          reason={availability}
+        />
+      </div>
+    );
+  }
+
+  if (!data) {
     notFound();
   }
 
@@ -91,8 +122,6 @@ async function RequestPageContent({ params, searchParams }: RequestPageProps) {
     notFound();
   }
 
-  setRequestLocale(locale);
-  const common = await getTranslations("Common");
   const query = await searchParams;
   const errorKey = query.error as
     keyof (typeof errors)[typeof locale] | undefined;
