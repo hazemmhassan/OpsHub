@@ -460,4 +460,3 @@ on public.integration_deliveries for select to authenticated
 using (
   (select private.has_org_role(org_id, array['admin']::text[]))
 );
-
