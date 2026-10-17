@@ -55,23 +55,23 @@ and AI assisted intake are planned for later stages.
 
 ## User roles
 
-| Role | Core responsibility |
-|---|---|
-| Requester | Submit a service request in Arabic or English without creating an account |
-| Approver | Review requests and make the first valid approval or rejection |
-| Administrator | Perform approver actions and inspect or retry failed deliveries |
+| Role          | Core responsibility                                                       |
+| ------------- | ------------------------------------------------------------------------- |
+| Requester     | Submit a service request in Arabic or English without creating an account |
+| Approver      | Review requests and make the first valid approval or rejection            |
+| Administrator | Perform approver actions and inspect or retry failed deliveries           |
 
 ## Technology plan
 
-| Area | Technology |
-|---|---|
-| Web application | Next.js, React, TypeScript |
-| Interface | Tailwind CSS, shadcn/ui, next-intl |
-| Forms and validation | React Hook Form, Zod, libphonenumber-js |
-| Database and authentication | Supabase, PostgreSQL, Supabase Auth |
-| Automation | TypeScript worker, n8n Community Edition, Google Sheets |
-| Testing | Vitest, React Testing Library, Playwright, Supabase database tests |
-| Later AI module | FastAPI, Pydantic, evaluated bilingual RAG intake |
+| Area                        | Technology                                                         |
+| --------------------------- | ------------------------------------------------------------------ |
+| Web application             | Next.js, React, TypeScript                                         |
+| Interface                   | Tailwind CSS, shadcn/ui, next-intl                                 |
+| Forms and validation        | React Hook Form, Zod, libphonenumber-js                            |
+| Database and authentication | Supabase, PostgreSQL, Supabase Auth                                |
+| Automation                  | TypeScript worker, n8n Community Edition, Google Sheets            |
+| Testing                     | Vitest, React Testing Library, Playwright, Supabase database tests |
+| Later AI module             | FastAPI, Pydantic, evaluated bilingual RAG intake                  |
 
 Exact package versions are locked in the repository manifests.
 
@@ -98,7 +98,7 @@ Exact package versions are locked in the repository manifests.
 - [x] Implement authentication and tenant isolation
 - [x] Implement request intake and staff review
 - [x] Implement the reliable database queue and signed delivery worker
-- [ ] Implement reliable n8n and Google Sheets delivery
+- [ ] Connect and verify live n8n and Google Sheets delivery
 - [ ] Complete security, accessibility, and end to end verification
 - [ ] Add and evaluate the optional bilingual AI intake module
 - [ ] Prepare the verified project for teams that want to use or adapt it
@@ -109,14 +109,20 @@ I am building this repository through small, reviewed commits. The reproducible
 foundation, staff authentication, organization roles, tenant isolation,
 bilingual public intake, and the staff review and decision flow are implemented
 locally. The database queue and signed delivery worker are also implemented and
-verified locally. The next stage is the n8n receiver, Google Sheets upsert, and
-the staff delivery diagnostics interface.
+verified locally.
 
-The current acceptance checkpoint passes the database, web, and worker test
-suites together with database linting, TypeScript, formatting, dependency
-audits, and production builds. The worker has also completed a real local
-database-to-webhook integration test with independent HMAC verification. The
-complete Phase 5 browser evidence remains recorded in its testing checklist.
+The importable n8n receiver, Google Sheets append-or-update mapping, and a
+no-Google local receiver are now implemented. The n8n workflow has been imported
+successfully into the pinned local n8n release, but a real Google credential and
+sheet have not been connected yet. Administrator-only delivery diagnostics and
+manual recovery are implemented and verified in both Arabic and English.
+
+The current acceptance checkpoint passes the database, web, worker, and n8n
+contract suites together with database linting, TypeScript, formatting,
+dependency audits, and production builds. The worker has also completed a real
+local database-to-webhook integration test with independent HMAC verification.
+The complete Phase 5 browser evidence remains recorded in its testing
+checklist.
 
 ## Implemented now
 
@@ -143,10 +149,20 @@ The current local application includes:
 - HMAC-SHA256 signed delivery with exact-origin restrictions and no redirects
 - Full-jitter retry scheduling, dead-letter handling, and admin-only retry RPC
 - Safe response validation, timeout handling, and a 64 KiB response limit
+- An importable n8n workflow that verifies the raw-body signature before the
+  Google credential boundary
+- Google Sheets Append or Update Row mapping keyed by request reference
+- A pinned local n8n Docker configuration with no committed credentials
+- A local in-memory receiver for demonstrations without Google credentials
+- Administrator-only delivery diagnostics with safe status, attempt, and error
+  details
+- Confirmed manual recovery for failed or stopped deliveries without erasing
+  attempt history
 - PostgreSQL constraints and Row Level Security that isolate organizations
 
-The n8n workflow, Google Sheets upsert, delivery diagnostics page, and manual
-retry interface are not implemented yet. They remain in Phase 6.
+A live Google credential and destination sheet have not been connected yet.
+That external verification remains in Phase 6 and no Google credentials are
+stored in this repository.
 
 ## Local development
 
@@ -190,3 +206,4 @@ The secret value belongs only in `.env.local` and must never be committed.
 - [Engineering design](docs/architecture/phase-2b-engineering-design.md)
 - [Phase 5 manual testing checklist](docs/testing/phase-5-manual-test-checklist.md)
 - [Phase 6 delivery worker checkpoint](docs/testing/phase-6-worker-checkpoint.md)
+- [n8n receiver setup](n8n/README.md)

@@ -27,6 +27,7 @@ const labels = {
     filter: "Apply filters",
     team: "Current team",
     signOut: "Sign out",
+    deliveries: "Delivery diagnostics",
   },
   ar: {
     title: "الطلبات",
@@ -42,6 +43,7 @@ const labels = {
     filter: "تطبيق الفلاتر",
     team: "الفريق الحالي",
     signOut: "تسجيل الخروج",
+    deliveries: "تشخيص التسليم",
   },
 } as const;
 
@@ -52,6 +54,7 @@ type StaffRequestsProps = {
   organizationName?: string;
   roleLabel?: string;
   signOutAction?: () => void | Promise<void>;
+  canViewDeliveries?: boolean;
 };
 
 export function StaffRequests({
@@ -61,6 +64,7 @@ export function StaffRequests({
   organizationName,
   roleLabel,
   signOutAction,
+  canViewDeliveries = false,
 }: StaffRequestsProps) {
   const copy = labels[locale];
   const statuses = [
@@ -87,6 +91,14 @@ export function StaffRequests({
       ) : null}
       <div className="staff-heading">
         <h1>{copy.title}</h1>
+        {canViewDeliveries ? (
+          <Link
+            className="secondary-action"
+            href={`/${locale}/staff/deliveries`}
+          >
+            {copy.deliveries}
+          </Link>
+        ) : null}
       </div>
       <form className="request-filters" method="get">
         <label>

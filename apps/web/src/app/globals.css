@@ -615,6 +615,36 @@ h2 {
   color: #8a2f22;
 }
 
+.status-failed,
+.status-dead {
+  background: #fff0ed;
+  color: #8a2f22;
+}
+
+.status-succeeded {
+  background: rgb(11 102 85 / 12%);
+  color: var(--brand);
+}
+
+.status-message {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.8rem;
+}
+
+.status-message-error {
+  border-color: rgb(138 47 34 / 24%);
+  background: #fff0ed;
+  color: #8a2f22;
+}
+
+.status-message-success {
+  border-color: rgb(11 102 85 / 24%);
+  background: rgb(11 102 85 / 8%);
+  color: var(--brand);
+}
+
 .detail-card,
 .decision-card,
 .timeline-card {

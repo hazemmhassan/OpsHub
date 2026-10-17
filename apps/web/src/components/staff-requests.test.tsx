@@ -29,4 +29,19 @@ describe("StaffRequests", () => {
     expect(within(requestLink).getByText("Submitted")).toBeInTheDocument();
     expect(within(requestLink).getByText("Arabic")).toBeInTheDocument();
   });
+
+  it("shows delivery diagnostics only to administrators", () => {
+    const { rerender } = render(
+      <StaffRequests canViewDeliveries locale="en" requests={[]} />,
+    );
+
+    expect(
+      screen.getByRole("link", { name: "Delivery diagnostics" }),
+    ).toHaveAttribute("href", "/en/staff/deliveries");
+
+    rerender(<StaffRequests locale="en" requests={[]} />);
+    expect(
+      screen.queryByRole("link", { name: "Delivery diagnostics" }),
+    ).not.toBeInTheDocument();
+  });
 });

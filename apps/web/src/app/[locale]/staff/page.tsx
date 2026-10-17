@@ -110,6 +110,7 @@ async function StaffPageContent({ params, searchParams }: StaffPageProps) {
         }}
       />
       <StaffRequests
+        canViewDeliveries={access.role === "admin"}
         filters={{ q: query.q ?? "", status }}
         locale={locale}
         organizationName={access.organizationName}
