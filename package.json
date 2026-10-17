@@ -12,6 +12,8 @@
     "db:status": "supabase status",
     "db:stop": "supabase stop",
     "db:test": "supabase test db",
+    "n8n:test": "node --test n8n/workflow-contract.test.mjs",
+    "n8n:validate": "docker run --rm -v ./n8n/workflows:/workflows:ro docker.n8n.io/n8nio/n8n:2.43.7 import:workflow --input=/workflows/opshub-google-sheets.json",
     "worker:build": "npm --prefix apps/worker run build",
     "worker:dev": "npm --prefix apps/worker run dev --",
     "worker:test": "npm --prefix apps/worker test",

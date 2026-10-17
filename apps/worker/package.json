@@ -10,6 +10,7 @@
   },
   "scripts": {
     "dev": "node --env-file=.env.local --import tsx src/main.ts",
+    "mock-receiver": "node --env-file=.env.local --import tsx src/mock-receiver-main.ts",
     "start": "node dist/main.js",
     "start:local": "node --env-file=.env.local dist/main.js",
     "build": "tsc -p tsconfig.build.json",

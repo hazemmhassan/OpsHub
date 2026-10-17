@@ -59,7 +59,7 @@ values (
   '00000000-0000-4000-8000-000000000001',
   'Local n8n Google Sheets',
   'n8n_google_sheets',
-  'http://host.docker.internal:5678/webhook/opshub',
+  'http://127.0.0.1:5678/webhook/opshub-approved-request',
   'OPSHUB_WEBHOOK_SIGNING_SECRET',
   true
 )

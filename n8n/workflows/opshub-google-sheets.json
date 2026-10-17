@@ -1,0 +1,326 @@
+{
+  "name": "OpsHub Approved Requests to Google Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "opshub-approved-request",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "1e995455-9c82-4f4f-9e38-f3990b276b1f",
+      "name": "Receive Approved Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [0, 0],
+      "webhookId": "opshub-approved-request"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const { createHmac, timingSafeEqual } = require('crypto');\nconst input = $input.first();\nconst headers = input.json.headers ?? {};\nconst rawBody = await this.helpers.getBinaryDataBuffer(0, 'data');\nconst secret = $env.OPSHUB_WEBHOOK_SIGNING_SECRET;\n\nfunction fail(code) { throw new Error(code); }\nfunction header(name) {\n  const value = headers[name] ?? headers[name.toLowerCase()];\n  if (typeof value !== 'string' || value.length === 0) fail('missing_signature_header');\n  return value;\n}\nfunction isRecord(value) { return typeof value === 'object' && value !== null && !Array.isArray(value); }\nfunction hasExactKeys(value, keys) {\n  const actual = Object.keys(value).sort();\n  const expected = [...keys].sort();\n  return actual.length === expected.length && actual.every((key, index) => key === expected[index]);\n}\nfunction isNullableString(value) { return value === null || typeof value === 'string'; }\nfunction isIsoDateTime(value) { return typeof value === 'string' && !Number.isNaN(Date.parse(value)); }\n\nif (typeof secret !== 'string' || secret.length < 32) fail('receiver_not_configured');\nconst eventId = header('x-opshub-event-id');\nconst timestamp = header('x-opshub-timestamp');\nconst suppliedSignature = header('x-opshub-signature');\nheader('idempotency-key');\nif (!/^\\d+$/.test(timestamp)) fail('invalid_timestamp');\nconst timestampSeconds = Number(timestamp);\nif (!Number.isSafeInteger(timestampSeconds) || Math.abs(Math.floor(Date.now() / 1000) - timestampSeconds) > 300) fail('stale_timestamp');\nif (!/^v1=[0-9a-f]{64}$/.test(suppliedSignature)) fail('invalid_signature');\nconst expectedSignature = 'v1=' + createHmac('sha256', secret).update(timestamp, 'utf8').update('.', 'utf8').update(rawBody).digest('hex');\nconst suppliedBytes = Buffer.from(suppliedSignature, 'utf8');\nconst expectedBytes = Buffer.from(expectedSignature, 'utf8');\nif (suppliedBytes.length !== expectedBytes.length || !timingSafeEqual(suppliedBytes, expectedBytes)) fail('invalid_signature');\n\nlet event;\ntry { event = JSON.parse(rawBody.toString('utf8')); } catch { fail('invalid_json'); }\nconst topKeys = ['event_id', 'event_type', 'event_version', 'occurred_at', 'request'];\nconst requestKeys = ['reference', 'submitted_at', 'approved_at', 'submitted_locale', 'requester_type', 'contact_name', 'email', 'phone_e164', 'country_code', 'preferred_contact_method', 'company_name', 'job_title', 'company_website', 'service_category', 'request_title', 'description', 'desired_start_date'];\nif (!isRecord(event) || !hasExactKeys(event, topKeys) || !isRecord(event.request) || !hasExactKeys(event.request, requestKeys)) fail('invalid_event');\nconst request = event.request;\nconst valid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(event.event_id)\n  && event.event_type === 'request.approved'\n  && event.event_version === 1\n  && isIsoDateTime(event.occurred_at)\n  && /^[0-9A-HJKMNP-TV-Z]{10}$/.test(request.reference)\n  && isIsoDateTime(request.submitted_at)\n  && isIsoDateTime(request.approved_at)\n  && ['ar', 'en'].includes(request.submitted_locale)\n  && ['individual', 'company'].includes(request.requester_type)\n  && typeof request.contact_name === 'string' && request.contact_name.length > 0\n  && typeof request.email === 'string' && /^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(request.email)\n  && typeof request.phone_e164 === 'string' && /^\\+[1-9]\\d{6,14}$/.test(request.phone_e164)\n  && typeof request.country_code === 'string' && /^[A-Z]{2}$/.test(request.country_code)\n  && (request.preferred_contact_method === null || ['email', 'phone'].includes(request.preferred_contact_method))\n  && isNullableString(request.company_name)\n  && isNullableString(request.job_title)\n  && isNullableString(request.company_website)\n  && ['consulting', 'it_software', 'marketing', 'training', 'support_maintenance', 'other'].includes(request.service_category)\n  && typeof request.request_title === 'string' && request.request_title.length > 0\n  && typeof request.description === 'string' && request.description.length > 0\n  && (request.desired_start_date === null || /^\\d{4}-\\d{2}-\\d{2}$/.test(request.desired_start_date));\nif (!valid) fail('invalid_event');\nif (event.event_id !== eventId) fail('event_id_mismatch');\nreturn [{ json: event }];"
+      },
+      "id": "2c7a0d99-8862-4d63-8939-e1c6c008106f",
+      "name": "Verify Signature and Event",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [240, 0]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const request = $input.first().json.request;\nreturn [{ json: { ...request } }];"
+      },
+      "id": "22fde735-1b86-44a7-9be5-152c6f758e43",
+      "name": "Map Destination Row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 0]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $env.OPSHUB_GOOGLE_SHEET_ID }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $env.OPSHUB_GOOGLE_SHEET_NAME }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "reference": "={{ $json.reference }}",
+            "submitted_at": "={{ $json.submitted_at }}",
+            "approved_at": "={{ $json.approved_at }}",
+            "submitted_locale": "={{ $json.submitted_locale }}",
+            "requester_type": "={{ $json.requester_type }}",
+            "contact_name": "={{ $json.contact_name }}",
+            "email": "={{ $json.email }}",
+            "phone_e164": "={{ $json.phone_e164 }}",
+            "country_code": "={{ $json.country_code }}",
+            "preferred_contact_method": "={{ $json.preferred_contact_method }}",
+            "company_name": "={{ $json.company_name }}",
+            "job_title": "={{ $json.job_title }}",
+            "company_website": "={{ $json.company_website }}",
+            "service_category": "={{ $json.service_category }}",
+            "request_title": "={{ $json.request_title }}",
+            "description": "={{ $json.description }}",
+            "desired_start_date": "={{ $json.desired_start_date }}"
+          },
+          "matchingColumns": ["reference"],
+          "schema": [
+            {
+              "id": "reference",
+              "displayName": "reference",
+              "required": true,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "submitted_at",
+              "displayName": "submitted_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "approved_at",
+              "displayName": "approved_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "submitted_locale",
+              "displayName": "submitted_locale",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "requester_type",
+              "displayName": "requester_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "contact_name",
+              "displayName": "contact_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "phone_e164",
+              "displayName": "phone_e164",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "country_code",
+              "displayName": "country_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "preferred_contact_method",
+              "displayName": "preferred_contact_method",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "company_name",
+              "displayName": "company_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "job_title",
+              "displayName": "job_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "company_website",
+              "displayName": "company_website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "service_category",
+              "displayName": "service_category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "request_title",
+              "displayName": "request_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "desired_start_date",
+              "displayName": "desired_start_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "handlingExtraData": "error"
+        }
+      },
+      "id": "688e8973-6144-47c7-ad1c-2c63a169637f",
+      "name": "Upsert Request by Reference",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [720, 0]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const event = $('Verify Signature and Event').first().json;\nreturn [{ json: { ok: true, event_id: event.event_id, request_reference: event.request.reference, effect: 'upserted' } }];"
+      },
+      "id": "c85192cd-186c-48c5-879a-9880de6e5dbe",
+      "name": "Build Verified Success",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [960, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [{ "name": "Cache-Control", "value": "no-store" }]
+          }
+        }
+      },
+      "id": "929e0927-7117-4c5c-a5b5-dbe9072b6c42",
+      "name": "Return Verified Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [1200, 0]
+    }
+  ],
+  "connections": {
+    "Receive Approved Request": {
+      "main": [
+        [{ "node": "Verify Signature and Event", "type": "main", "index": 0 }]
+      ]
+    },
+    "Verify Signature and Event": {
+      "main": [[{ "node": "Map Destination Row", "type": "main", "index": 0 }]]
+    },
+    "Map Destination Row": {
+      "main": [
+        [{ "node": "Upsert Request by Reference", "type": "main", "index": 0 }]
+      ]
+    },
+    "Upsert Request by Reference": {
+      "main": [
+        [{ "node": "Build Verified Success", "type": "main", "index": 0 }]
+      ]
+    },
+    "Build Verified Success": {
+      "main": [
+        [{ "node": "Return Verified Success", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
+  },
+  "active": false,
+  "versionId": "d5d1e2a5-cd80-4d8a-aeeb-1631238a8990"
+}

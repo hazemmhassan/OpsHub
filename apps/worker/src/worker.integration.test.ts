@@ -1,9 +1,9 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
-import { createServer } from "node:http";
 import { createClient } from "@supabase/supabase-js";
 import { describe, expect, it } from "vitest";
 
 import { processDelivery } from "./delivery-processor.js";
+import { createMockReceiverServer } from "./mock-receiver-server.js";
+import { InMemoryApprovedRequestStore } from "./mock-receiver-store.js";
 import { sendWebhook } from "./webhook-client.js";
 import { SupabaseDeliveryRepository } from "./supabase-repository.js";
 
@@ -29,49 +29,12 @@ integration("worker database and receiver integration", () => {
       auth: { persistSession: false, autoRefreshToken: false },
     });
     const repository = new SupabaseDeliveryRepository(client);
-    const server = createServer((request, response) => {
-      const chunks: Buffer[] = [];
-      request.on("data", (chunk: Buffer) => chunks.push(chunk));
-      request.on("end", () => {
-        const body = Buffer.concat(chunks).toString("utf8");
-        const timestamp = request.headers["x-opshub-timestamp"];
-        const signature = request.headers["x-opshub-signature"];
-        const eventId = request.headers["x-opshub-event-id"];
-        if (
-          typeof timestamp !== "string" ||
-          typeof signature !== "string" ||
-          typeof eventId !== "string"
-        ) {
-          response.writeHead(401).end();
-          return;
-        }
-
-        const expected = `v1=${createHmac("sha256", signingSecret)
-          .update(`${timestamp}.${body}`, "utf8")
-          .digest("hex")}`;
-        const signatureMatches =
-          signature.length === expected.length &&
-          timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
-        const payload = JSON.parse(body) as {
-          event_id: string;
-          request: { reference: string };
-        };
-
-        if (!signatureMatches || eventId !== payload.event_id) {
-          response.writeHead(401).end();
-          return;
-        }
-
-        response.writeHead(200, { "Content-Type": "application/json" });
-        response.end(
-          JSON.stringify({
-            ok: true,
-            event_id: payload.event_id,
-            request_reference: payload.request.reference,
-            effect: "upserted",
-          }),
-        );
-      });
+    const store = new InMemoryApprovedRequestStore();
+    const server = createMockReceiverServer({
+      secret: signingSecret,
+      store,
+      nowSeconds: () =>
+        Math.floor(new Date("2026-10-17T12:00:10.000Z").getTime() / 1_000),
     });
 
     await new Promise<void>((resolve) =>
@@ -94,7 +57,7 @@ integration("worker database and receiver integration", () => {
       await client
         .from("webhook_endpoints")
         .update({
-          url: "http://host.docker.internal:5678/webhook/opshub",
+          url: "http://127.0.0.1:5678/webhook/opshub-approved-request",
           signing_secret_ref: "OPSHUB_WEBHOOK_SIGNING_SECRET",
         })
         .eq("id", endpointId);
@@ -106,7 +69,7 @@ integration("worker database and receiver integration", () => {
       const { error: endpointError } = await client
         .from("webhook_endpoints")
         .update({
-          url: `${origin}/webhook`,
+          url: `${origin}/webhook/opshub`,
           signing_secret_ref: "OPSHUB_WEBHOOK_SIGNING_SECRET",
         })
         .eq("id", endpointId);
@@ -190,6 +153,11 @@ integration("worker database and receiver integration", () => {
         lock_token: null,
       });
       expect(storedDelivery.succeeded_at).toEqual(expect.any(String));
+      expect(store.list()).toHaveLength(1);
+      expect(store.list()[0]).toMatchObject({
+        reference: "6B00000001",
+        email: "worker-integration@example.test",
+      });
     } finally {
       await cleanup();
       await new Promise<void>((resolve, reject) => {
