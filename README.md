@@ -97,6 +97,7 @@ Exact package versions are locked in the repository manifests.
 - [x] Create the reproducible project foundation
 - [x] Implement authentication and tenant isolation
 - [x] Implement request intake and staff review
+- [x] Implement the reliable database queue and signed delivery worker
 - [ ] Implement reliable n8n and Google Sheets delivery
 - [ ] Complete security, accessibility, and end to end verification
 - [ ] Add and evaluate the optional bilingual AI intake module
@@ -107,15 +108,15 @@ Exact package versions are locked in the repository manifests.
 I am building this repository through small, reviewed commits. The reproducible
 foundation, staff authentication, organization roles, tenant isolation,
 bilingual public intake, and the staff review and decision flow are implemented
-locally. The next stage is the reliable delivery worker and the n8n and Google
-Sheets integration.
+locally. The database queue and signed delivery worker are also implemented and
+verified locally. The next stage is the n8n receiver, Google Sheets upsert, and
+the staff delivery diagnostics interface.
 
-The current acceptance checkpoint passes 132 database assertions and 37 web
-tests, together with database linting, TypeScript, ESLint, formatting, dependency
-audits, and the production build. The complete Phase 5 workflow has also been
-exercised in a real browser in both languages, including approval, rejection,
-rate limiting, honeypot protection, and concurrent submissions and decisions.
-The detailed evidence is recorded in the Phase 5 testing checklist.
+The current acceptance checkpoint passes the database, web, and worker test
+suites together with database linting, TypeScript, formatting, dependency
+audits, and production builds. The worker has also completed a real local
+database-to-webhook integration test with independent HMAC verification. The
+complete Phase 5 browser evidence remains recorded in its testing checklist.
 
 ## Implemented now
 
@@ -137,10 +138,15 @@ The current local application includes:
 - An explicit confirmation step before a request is approved
 - Required rejection reasons and a read-only activity timeline
 - Atomic creation of a pending integration delivery after approval
+- Short database claims with leases, `SKIP LOCKED`, and fencing tokens
+- Immutable V1 webhook payloads without internal IDs or raw consent data
+- HMAC-SHA256 signed delivery with exact-origin restrictions and no redirects
+- Full-jitter retry scheduling, dead-letter handling, and admin-only retry RPC
+- Safe response validation, timeout handling, and a 64 KiB response limit
 - PostgreSQL constraints and Row Level Security that isolate organizations
 
-The delivery worker, n8n workflow, Google Sheets upsert, delivery retries, and
-manual retry interface are not implemented yet. They belong to the next phase.
+The n8n workflow, Google Sheets upsert, delivery diagnostics page, and manual
+retry interface are not implemented yet. They remain in Phase 6.
 
 ## Local development
 
@@ -150,6 +156,7 @@ repository tooling and web application dependencies separately:
 ```bash
 npm ci
 npm --prefix apps/web ci
+npm --prefix apps/worker ci
 ```
 
 Start Docker Desktop, then use the repository commands to manage and test the
@@ -165,9 +172,21 @@ npm run db:stop
 The local Supabase stack is for development only and must not be exposed as a
 production service.
 
+To run one local worker batch, copy the worker environment template, replace
+the placeholders with the local values from `npx supabase status -o env`, and
+use a random signing secret of at least 32 characters:
+
+```powershell
+Copy-Item apps/worker/.env.example apps/worker/.env.local
+npm run worker:dev -- --once
+```
+
+The secret value belongs only in `.env.local` and must never be committed.
+
 ## Project documents
 
 - [Core MVP specification](docs/product/mvp-spec.md)
 - [Bilingual flows and state machines](docs/architecture/phase-2a-flows-and-state-machines.md)
 - [Engineering design](docs/architecture/phase-2b-engineering-design.md)
 - [Phase 5 manual testing checklist](docs/testing/phase-5-manual-test-checklist.md)
+- [Phase 6 delivery worker checkpoint](docs/testing/phase-6-worker-checkpoint.md)

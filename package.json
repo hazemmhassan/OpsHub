@@ -11,7 +11,11 @@
     "db:start": "supabase start",
     "db:status": "supabase status",
     "db:stop": "supabase stop",
-    "db:test": "supabase test db"
+    "db:test": "supabase test db",
+    "worker:build": "npm --prefix apps/worker run build",
+    "worker:dev": "npm --prefix apps/worker run dev --",
+    "worker:test": "npm --prefix apps/worker test",
+    "worker:typecheck": "npm --prefix apps/worker run typecheck"
   },
   "devDependencies": {
     "supabase": "2.121.0"
