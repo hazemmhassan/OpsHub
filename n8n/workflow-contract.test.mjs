@@ -157,7 +157,7 @@ test("the workflow verifier rejects a body changed after signing", async () => {
   );
 });
 
-test("the workflow row mapper preserves nullable fields and emits only destination columns", async () => {
+test("the workflow row mapper preserves E.164 phone text and emits only destination columns", async () => {
   const workflow = await loadWorkflow();
   const mapper = workflow.nodes.find(
     (node) => node.name === "Map Destination Row",
@@ -168,5 +168,12 @@ test("the workflow row mapper preserves nullable fields and emits only destinati
     rawBody: "",
   });
 
-  assert.deepEqual(result, [{ json: payload.request }]);
+  assert.deepEqual(result, [
+    {
+      json: {
+        ...payload.request,
+        phone_e164: "'+201000000000",
+      },
+    },
+  ]);
 });

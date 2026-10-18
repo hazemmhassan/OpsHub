@@ -35,6 +35,10 @@ secret outside the exported workflow.
 7. Publish the workflow and use its production URL:
    `http://127.0.0.1:5678/webhook/opshub-approved-request`.
 
+The row mapper prefixes the E.164 phone value with Google Sheets' text-entry
+marker. The marker is not displayed in the sheet; it prevents a value beginning
+with `+` from being evaluated as a formula and preserves the exact phone text.
+
 Keep the workflow unpublished until the credential, spreadsheet, secret, and
 column mapping are configured. Use synthetic data for local demonstrations.
 

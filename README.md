@@ -12,7 +12,7 @@ problems and aims to make the whole process easier to manage and trust.
 OpsHub is currently in active development. The product and engineering design
 are approved, and the application is being built step by step. The features
 below describe the first release. The request and review workflow is now
-implemented locally, while reliable external delivery is the next stage.
+implemented locally, including reliable delivery through n8n to Google Sheets.
 
 ## What I want OpsHub to solve
 
@@ -98,7 +98,7 @@ Exact package versions are locked in the repository manifests.
 - [x] Implement authentication and tenant isolation
 - [x] Implement request intake and staff review
 - [x] Implement the reliable database queue and signed delivery worker
-- [ ] Connect and verify live n8n and Google Sheets delivery
+- [x] Connect and verify live n8n and Google Sheets delivery
 - [ ] Complete security, accessibility, and end to end verification
 - [ ] Add and evaluate the optional bilingual AI intake module
 - [ ] Prepare the verified project for teams that want to use or adapt it
@@ -112,10 +112,11 @@ locally. The database queue and signed delivery worker are also implemented and
 verified locally.
 
 The importable n8n receiver, Google Sheets append-or-update mapping, and a
-no-Google local receiver are now implemented. The n8n workflow has been imported
-successfully into the pinned local n8n release, but a real Google credential and
-sheet have not been connected yet. Administrator-only delivery diagnostics and
-manual recovery are implemented and verified in both Arabic and English.
+no-Google local receiver are now implemented. The n8n workflow is active in the
+pinned local n8n release and has completed a live Google Sheets append followed
+by a duplicate update using the same request reference. Administrator-only
+delivery diagnostics and manual recovery are implemented and verified in both
+Arabic and English.
 
 The current acceptance checkpoint passes the database, web, worker, and n8n
 contract suites together with database linting, TypeScript, formatting,
@@ -152,6 +153,8 @@ The current local application includes:
 - An importable n8n workflow that verifies the raw-body signature before the
   Google credential boundary
 - Google Sheets Append or Update Row mapping keyed by request reference
+- Live Google Sheets verification showing that a repeated reference updates the
+  existing row and preserves the E.164 phone number as text
 - A pinned local n8n Docker configuration with no committed credentials
 - A local in-memory receiver for demonstrations without Google credentials
 - Administrator-only delivery diagnostics with safe status, attempt, and error
@@ -160,9 +163,9 @@ The current local application includes:
   attempt history
 - PostgreSQL constraints and Row Level Security that isolate organizations
 
-A live Google credential and destination sheet have not been connected yet.
-That external verification remains in Phase 6 and no Google credentials are
-stored in this repository.
+The live Google credential remains only in the local n8n credential store, and
+the destination spreadsheet settings remain in the ignored local environment.
+No Google credentials are stored in this repository.
 
 ## Local development
 

@@ -31,7 +31,7 @@
     {
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "const request = $input.first().json.request;\nreturn [{ json: { ...request } }];"
+        "jsCode": "const request = $input.first().json.request;\nreturn [{ json: { ...request, phone_e164: `'${request.phone_e164}` } }];"
       },
       "id": "22fde735-1b86-44a7-9be5-152c6f758e43",
       "name": "Map Destination Row",

@@ -1,8 +1,7 @@
 # Phase 6 delivery worker checkpoint
 
-Status: Checkpoints 6A, 6B, 6D, and the local portion of 6C are implemented and
-verified. Phase 6 is not complete because a real Google credential and sheet
-must still be connected and verified.
+Status: Complete. Checkpoints 6A through 6D are implemented and verified,
+including a live signed n8n delivery to a real Google Sheet.
 
 ## Implemented in this checkpoint
 
@@ -37,7 +36,7 @@ must still be connected and verified.
 ## Verification evidence
 
 Verified locally on 2026-10-17 after rebuilding the database from every
-migration:
+migration, with live Google Sheets verification completed on 2026-10-18:
 
 | Check                                                   | Result                                                         |
 | ------------------------------------------------------- | -------------------------------------------------------------- |
@@ -48,6 +47,8 @@ migration:
 | n8n workflow contract                                   | 6 executable checks passed                                     |
 | n8n import validation                                   | 1 workflow imported successfully into n8n 2.43.7               |
 | n8n Compose validation                                  | Configuration resolved successfully                            |
+| Live n8n and Google Sheets delivery                     | Two HTTP 200 deliveries produced one row and one update        |
+| Destination data fidelity                               | E.164 `+` preserved as text after the repeated update          |
 | Worker TypeScript                                       | Passed                                                         |
 | Worker formatting                                       | Passed                                                         |
 | Worker production build                                 | Passed                                                         |
@@ -92,13 +93,29 @@ The browser verification used exact synthetic rows that were removed afterward:
    direct diagnostics URL reaches the administrator-required boundary.
 7. Confirm that the browser console reports no errors in these flows.
 
-## Remaining Phase 6 work
+## Live Google Sheets scenario
 
-- Connect a real Google credential and sheet, then record one live append and
-  one duplicate update using synthetic data
-- Record the final live Google delivery evidence without storing credentials in
-  Git
+The final receiver verification used one synthetic request reference and the
+active local n8n production webhook:
 
-The repository does not claim live Google Sheets delivery yet. The exported
-workflow has been behavior-tested and imported into the pinned n8n release, but
-Google authentication is intentionally never stored in Git.
+1. Send a correctly signed V1 approval event and receive HTTP 200 with the
+   matching event ID and request reference.
+2. Send a second correctly signed event with the same request reference and an
+   updated request title.
+3. Confirm that Google Sheets contains exactly one matching row.
+4. Confirm that the row contains the second title, proving the external effect
+   was an update rather than a duplicate append.
+5. Confirm that `phone_e164` remains the exact text `+201000000000`, including
+   its leading plus sign.
+6. Remove the synthetic row and verify that no matching reference remains.
+
+The workflow contract test now protects the phone mapping against Google
+Sheets formula coercion. The repository export remains free of credential IDs
+and secrets.
+
+## Phase 6 completion
+
+Phase 6 is complete. Google authentication stays in the encrypted local n8n
+credential store, the spreadsheet ID and signing secret stay in the ignored
+local environment, and neither is committed to Git. Phase 7 owns the remaining
+security, accessibility, full end-to-end, and release-readiness verification.
