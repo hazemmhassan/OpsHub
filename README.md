@@ -99,7 +99,7 @@ Exact package versions are locked in the repository manifests.
 - [x] Implement request intake and staff review
 - [x] Implement the reliable database queue and signed delivery worker
 - [x] Connect and verify live n8n and Google Sheets delivery
-- [ ] Complete security, accessibility, and end to end verification
+- [x] Complete security, accessibility, and end to end verification
 - [ ] Add and evaluate the optional bilingual AI intake module
 - [ ] Prepare the verified project for teams that want to use or adapt it
 
@@ -118,12 +118,11 @@ by a duplicate update using the same request reference. Administrator-only
 delivery diagnostics and manual recovery are implemented and verified in both
 Arabic and English.
 
-The current acceptance checkpoint passes the database, web, worker, and n8n
-contract suites together with database linting, TypeScript, formatting,
-dependency audits, and production builds. The worker has also completed a real
-local database-to-webhook integration test with independent HMAC verification.
-The complete Phase 5 browser evidence remains recorded in its testing
-checklist.
+The Core MVP acceptance checkpoint now passes the database, web, browser,
+worker, and n8n contract suites together with database linting, accessibility
+scans, TypeScript, formatting, production dependency audits, and production
+builds. The clean local database rebuild and complete evidence matrix are
+recorded in the Phase 7 hardening report.
 
 ## Implemented now
 
@@ -162,6 +161,9 @@ The current local application includes:
 - Confirmed manual recovery for failed or stopped deliveries without erasing
   attempt history
 - PostgreSQL constraints and Row Level Security that isolate organizations
+- Automated English and Arabic browser journeys with mobile, keyboard,
+  accessibility, security-header, and cleanup checks
+- Security response headers and private no-store caching for staff pages
 
 The live Google credential remains only in the local n8n credential store, and
 the destination spreadsheet settings remain in the ignored local environment.
@@ -176,6 +178,7 @@ repository tooling and web application dependencies separately:
 npm ci
 npm --prefix apps/web ci
 npm --prefix apps/worker ci
+npm --prefix apps/web exec playwright install chromium
 ```
 
 Start Docker Desktop, then use the repository commands to manage and test the
@@ -190,6 +193,26 @@ npm run db:stop
 
 The local Supabase stack is for development only and must not be exposed as a
 production service.
+
+Copy the web environment template to `apps/web/.env.local`, then use
+`npx supabase status -o env` to map `API_URL` to
+`NEXT_PUBLIC_SUPABASE_URL`, `PUBLISHABLE_KEY` to
+`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `SECRET_KEY` to
+`SUPABASE_SECRET_KEY`. Use a separate random value of at least 32 characters
+for `PUBLIC_SUBMISSION_RATE_LIMIT_KEY`. Never commit `.env.local`.
+
+```powershell
+Copy-Item apps/web/.env.example apps/web/.env.local
+npm --prefix apps/web run dev
+```
+
+Run the repeatable browser journey after Supabase is ready. It creates a
+temporary synthetic administrator and request, verifies the full workflow, and
+removes both afterward.
+
+```bash
+npm --prefix apps/web run test:e2e
+```
 
 To run one local worker batch, copy the worker environment template, replace
 the placeholders with the local values from `npx supabase status -o env`, and
@@ -209,4 +232,5 @@ The secret value belongs only in `.env.local` and must never be committed.
 - [Engineering design](docs/architecture/phase-2b-engineering-design.md)
 - [Phase 5 manual testing checklist](docs/testing/phase-5-manual-test-checklist.md)
 - [Phase 6 delivery worker checkpoint](docs/testing/phase-6-worker-checkpoint.md)
+- [Phase 7 Core MVP hardening](docs/testing/phase-7-core-mvp-hardening.md)
 - [n8n receiver setup](n8n/README.md)

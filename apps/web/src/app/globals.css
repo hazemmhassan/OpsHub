@@ -34,6 +34,28 @@ a {
   text-decoration: none;
 }
 
+:focus-visible {
+  outline: 3px solid rgb(11 102 85 / 42%);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  inset-block-start: 0.75rem;
+  inset-inline-start: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.65rem;
+  background: var(--ink);
+  color: white;
+  font-weight: 800;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
 .sr-only {
   position: absolute;
   inline-size: 1px;

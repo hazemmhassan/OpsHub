@@ -80,4 +80,55 @@ describe("PublicRequestForm", () => {
     ).toBeInTheDocument();
     expect(screen.queryByRole("alert")).toBeNull();
   });
+
+  it("moves keyboard focus to the validation summary", () => {
+    const { container } = render(
+      <PublicRequestForm
+        action={vi.fn()}
+        consentVersion="consent-en-v1"
+        locale="en"
+        organizationDate="2026-10-16"
+        publicId="opshub-demo-request-form"
+      />,
+    );
+
+    fireEvent.submit(container.querySelector("form")!);
+
+    expect(screen.getByRole("alert")).toHaveFocus();
+  });
+
+  it("exposes browser autofill hints for contact and company details", () => {
+    render(
+      <PublicRequestForm
+        action={vi.fn()}
+        consentVersion="consent-en-v1"
+        locale="en"
+        organizationDate="2026-10-16"
+        publicId="opshub-demo-request-form"
+      />,
+    );
+
+    expect(screen.getByLabelText("Contact name")).toHaveAttribute(
+      "autocomplete",
+      "name",
+    );
+    expect(screen.getByLabelText("Email")).toHaveAttribute(
+      "autocomplete",
+      "email",
+    );
+    expect(screen.getByLabelText("Phone")).toHaveAttribute(
+      "autocomplete",
+      "tel",
+    );
+
+    fireEvent.click(screen.getByLabelText("Company"));
+    expect(screen.getByLabelText("Company name")).toHaveAttribute(
+      "autocomplete",
+      "organization",
+    );
+    expect(screen.getByLabelText("Job title (optional)")).toHaveAttribute(
+      "autocomplete",
+      "organization-title",
+    );
+  });
 });

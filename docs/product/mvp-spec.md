@@ -358,42 +358,42 @@ long-running `wait` operation belongs inside a Next.js request handler.
 
 The Core MVP is complete only when all of the following are demonstrated:
 
-- [ ] An Arabic requester can submit the predefined request on a mobile-sized
+- [x] An Arabic requester can submit the predefined request on a mobile-sized
       screen.
-- [ ] An English requester can submit the same workflow in LTR mode.
-- [ ] Arabic-Indic and Western digits normalize consistently.
-- [ ] A valid phone is stored as both raw input and normalized E.164; a selected
+- [x] An English requester can submit the same workflow in LTR mode.
+- [x] Arabic-Indic and Western digits normalize consistently.
+- [x] A valid phone is stored as both raw input and normalized E.164; a selected
       country mismatch warns without rejecting the request.
-- [ ] Company-only fields are removed server-side from an individual request,
+- [x] Company-only fields are removed server-side from an individual request,
       including when the client submits them directly.
-- [ ] The submitted locale is stored automatically as `ar` or `en`.
-- [ ] Consent records include the text version, server timestamp, and locale.
-- [ ] Repeating a submission with the same idempotency key does not create a
+- [x] The submitted locale is stored automatically as `ar` or `en`.
+- [x] Consent records include the text version, server timestamp, and locale.
+- [x] Repeating a submission with the same idempotency key does not create a
       second request.
-- [ ] Two separate submissions with different idempotency keys remain separate
+- [x] Two separate submissions with different idempotency keys remain separate
       requests even when their content is identical.
-- [ ] A public client cannot select an arbitrary organization identifier.
-- [ ] The confirmation reference is random and non-sequential and does not grant
+- [x] A public client cannot select an arbitrary organization identifier.
+- [x] The confirmation reference is random and non-sequential and does not grant
       access to request data.
-- [ ] An approver or administrator can approve or reject a submitted request.
-- [ ] Repeating Start Review on an `under_review` request returns the current
+- [x] An approver or administrator can approve or reject a submitted request.
+- [x] Repeating Start Review on an `under_review` request returns the current
       state without an error or duplicate transition event.
-- [ ] Rejection requires a reason.
-- [ ] A second approval or rejection of the same finalized decision is refused.
-- [ ] Two simultaneous valid decisions result in one success and one conflict,
+- [x] Rejection requires a reason.
+- [x] A second approval or rejection of the same finalized decision is refused.
+- [x] Two simultaneous valid decisions result in one success and one conflict,
       with the successful actor recorded in the audit log.
-- [ ] Approval and outbox creation occur atomically.
-- [ ] One approval creates one integration event, even when processing is
+- [x] Approval and outbox creation occur atomically.
+- [x] One approval creates one integration event, even when processing is
       retried.
-- [ ] A successful n8n workflow adds exactly one Google Sheets row.
-- [ ] A failed delivery appears on the failed-jobs page.
-- [ ] An authorized retry can recover a temporarily failed delivery.
-- [ ] An unauthorized user cannot trigger a retry.
-- [ ] A user from one organization cannot read or change another organization's
+- [x] A successful n8n workflow adds exactly one Google Sheets row.
+- [x] A failed delivery appears on the failed-jobs page.
+- [x] An authorized retry can recover a temporarily failed delivery.
+- [x] An unauthorized user cannot trigger a retry.
+- [x] A user from one organization cannot read or change another organization's
       data.
-- [ ] Material actions appear in the audit timeline with actor and timestamp.
-- [ ] The full E2E journey passes using synthetic data.
-- [ ] Setup instructions reproduce the project on a clean development machine.
+- [x] Material actions appear in the audit timeline with actor and timestamp.
+- [x] The full E2E journey passes using synthetic data.
+- [x] Setup instructions reproduce the project on a clean development machine.
 
 ## 11. Portfolio V1 AI module (P1)
 

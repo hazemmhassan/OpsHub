@@ -53,7 +53,12 @@ export default function RequestPage(props: RequestPageProps) {
 
 function RequestFormLoading() {
   return (
-    <main className="request-form-shell" aria-busy="true">
+    <main
+      className="request-form-shell"
+      id="main-content"
+      tabIndex={-1}
+      aria-busy="true"
+    >
       <div className="request-form">
         <div className="staff-loading-mark" aria-hidden="true">
           <span />

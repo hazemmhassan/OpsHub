@@ -21,22 +21,27 @@ export function SiteHeader({ locale, labels, area }: SiteHeaderProps) {
     area === "public" ? labels.teamWorkspace : labels.home;
 
   return (
-    <header className="site-header">
-      <div className="header-inner">
-        <Link className="brand" href={`/${locale}`} aria-label={labels.brand}>
-          <span className="brand-mark" aria-hidden="true">
-            O
-          </span>
-          <span dir="ltr">{labels.brand}</span>
-        </Link>
-
-        <div className="header-actions">
-          <Link className="area-link" href={destination}>
-            {destinationLabel}
+    <>
+      <a className="skip-link" href="#main-content">
+        {locale === "ar" ? "انتقل إلى المحتوى الرئيسي" : "Skip to main content"}
+      </a>
+      <header className="site-header">
+        <div className="header-inner">
+          <Link className="brand" href={`/${locale}`}>
+            <span className="brand-mark" aria-hidden="true">
+              O
+            </span>
+            <span dir="ltr">{labels.brand}</span>
           </Link>
-          <LocaleSwitcher currentLocale={locale} labels={labels.languages} />
+
+          <div className="header-actions">
+            <Link className="area-link" href={destination}>
+              {destinationLabel}
+            </Link>
+            <LocaleSwitcher currentLocale={locale} labels={labels.languages} />
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }

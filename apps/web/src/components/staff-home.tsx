@@ -15,7 +15,7 @@ type StaffHomeProps = {
 
 export function StaffHome({ action, copy, organizationName }: StaffHomeProps) {
   return (
-    <main className="staff-main">
+    <main className="staff-main" id="main-content" tabIndex={-1}>
       <aside className="staff-session" aria-label={copy.organizationLabel}>
         <div>
           <span>{copy.organizationLabel}</span>

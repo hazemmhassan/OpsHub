@@ -55,7 +55,7 @@ export function PublicRequestUnavailable({
       : `/${locale}`;
 
   return (
-    <main className="confirmation-main">
+    <main className="confirmation-main" id="main-content" tabIndex={-1}>
       <section className="confirmation-card">
         <p className="eyebrow">{labels.eyebrow}</p>
         <h1>{labels.title}</h1>

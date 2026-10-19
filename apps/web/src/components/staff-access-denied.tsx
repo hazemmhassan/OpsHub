@@ -11,7 +11,7 @@ type StaffAccessDeniedProps = {
 
 export function StaffAccessDenied({ action, copy }: StaffAccessDeniedProps) {
   return (
-    <main className="auth-main">
+    <main className="auth-main" id="main-content" tabIndex={-1}>
       <section className="auth-card" aria-labelledby="access-denied-title">
         <p className="eyebrow">{copy.eyebrow}</p>
         <h1 id="access-denied-title">{copy.title}</h1>

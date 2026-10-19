@@ -62,7 +62,7 @@ export function StaffSignIn({
           : null;
 
   return (
-    <main className="auth-main">
+    <main className="auth-main" id="main-content" tabIndex={-1}>
       <section className="auth-card" aria-labelledby="staff-sign-in-title">
         <p className="eyebrow">{copy.eyebrow}</p>
         <h1 id="staff-sign-in-title">{copy.title}</h1>

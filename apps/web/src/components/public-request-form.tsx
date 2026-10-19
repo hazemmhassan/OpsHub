@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import countries from "i18n-iso-countries";
 import arCountries from "i18n-iso-countries/langs/ar.json";
@@ -101,6 +101,7 @@ export function PublicRequestForm({
     "individual",
   );
   const [error, setError] = useState<string | null>(null);
+  const errorRef = useRef<HTMLParagraphElement>(null);
   const [phone, setPhone] = useState("");
   const [countryCode, setCountryCode] = useState("EG");
   const [idempotencyKey] = useState(() => crypto.randomUUID());
@@ -115,6 +116,12 @@ export function PublicRequestForm({
       return rankA - rankB || nameA.localeCompare(nameB, locale);
     },
   );
+
+  useEffect(() => {
+    if (error || serverError) {
+      errorRef.current?.focus();
+    }
+  }, [error, serverError]);
 
   function validate(event: React.FormEvent<HTMLFormElement>) {
     const data = new FormData(event.currentTarget);
@@ -148,7 +155,7 @@ export function PublicRequestForm({
   }
 
   return (
-    <main className="request-form-shell">
+    <main className="request-form-shell" id="main-content" tabIndex={-1}>
       <form action={action} className="request-form" onSubmit={validate}>
         <header>
           <p className="eyebrow">OpsHub</p>
@@ -156,7 +163,7 @@ export function PublicRequestForm({
           <p>{copy.intro}</p>
         </header>
         {error || serverError ? (
-          <p role="alert" className="form-error">
+          <p ref={errorRef} role="alert" className="form-error" tabIndex={-1}>
             {error ?? serverError}
           </p>
         ) : null}
@@ -175,6 +182,7 @@ export function PublicRequestForm({
         <input name="idempotencyKey" type="hidden" value={idempotencyKey} />
         <input
           name="website"
+          aria-hidden="true"
           className="honeypot"
           tabIndex={-1}
           autoComplete="off"
@@ -206,16 +214,29 @@ export function PublicRequestForm({
         </fieldset>
         <label>
           {copy.contact}
-          <input name="contactName" required maxLength={120} />
+          <input
+            autoComplete="name"
+            name="contactName"
+            required
+            maxLength={120}
+          />
         </label>
         <label>
           {copy.email}
-          <input name="email" type="email" required maxLength={254} dir="ltr" />
+          <input
+            autoComplete="email"
+            name="email"
+            type="email"
+            required
+            maxLength={254}
+            dir="ltr"
+          />
         </label>
         <label>
           {copy.phone}
           <input
             dir="ltr"
+            autoComplete="tel"
             maxLength={64}
             name="phone"
             onChange={(event) => setPhone(event.target.value)}
@@ -227,6 +248,7 @@ export function PublicRequestForm({
         <label>
           {copy.country}
           <select
+            autoComplete="country"
             name="countryCode"
             onChange={(event) => setCountryCode(event.target.value)}
             required
@@ -278,15 +300,30 @@ export function PublicRequestForm({
           <div className="company-fields">
             <label>
               {copy.companyName}
-              <input name="companyName" required maxLength={160} />
+              <input
+                autoComplete="organization"
+                name="companyName"
+                required
+                maxLength={160}
+              />
             </label>
             <label>
               {copy.jobTitle}
-              <input name="jobTitle" maxLength={120} />
+              <input
+                autoComplete="organization-title"
+                name="jobTitle"
+                maxLength={120}
+              />
             </label>
             <label>
               {copy.website}
-              <input name="companyWebsite" maxLength={2048} dir="ltr" />
+              <input
+                autoComplete="url"
+                inputMode="url"
+                name="companyWebsite"
+                maxLength={2048}
+                dir="ltr"
+              />
             </label>
           </div>
         ) : null}

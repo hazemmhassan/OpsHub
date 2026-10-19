@@ -59,7 +59,7 @@ export function StaffDeliveries({
   const labels = copy[locale];
 
   return (
-    <main className="staff-main request-detail">
+    <main className="staff-main request-detail" id="main-content" tabIndex={-1}>
       <Link className="text-action" href={`/${locale}/staff`}>
         {labels.back}
       </Link>

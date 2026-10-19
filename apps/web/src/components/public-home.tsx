@@ -17,7 +17,7 @@ type PublicHomeProps = {
 
 export function PublicHome({ locale, copy }: PublicHomeProps) {
   return (
-    <main className="public-main">
+    <main className="public-main" id="main-content" tabIndex={-1}>
       <section className="hero" aria-labelledby="public-home-title">
         <div className="hero-copy">
           <p className="eyebrow">{copy.eyebrow}</p>

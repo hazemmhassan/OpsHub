@@ -32,7 +32,14 @@ const copy = {
 export default function ConfirmationPage(props: ConfirmationPageProps) {
   return (
     <Suspense
-      fallback={<main className="confirmation-main" aria-busy="true" />}
+      fallback={
+        <main
+          className="confirmation-main"
+          id="main-content"
+          tabIndex={-1}
+          aria-busy="true"
+        />
+      }
     >
       <ConfirmationPageContent {...props} />
     </Suspense>
@@ -56,7 +63,7 @@ async function ConfirmationPageContent({
 
   const text = copy[locale];
   return (
-    <main className="confirmation-main">
+    <main className="confirmation-main" id="main-content" tabIndex={-1}>
       <section className="confirmation-card">
         <p className="eyebrow">OpsHub</p>
         <h1>{text.title}</h1>

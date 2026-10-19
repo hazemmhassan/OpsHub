@@ -74,7 +74,7 @@ export function StaffRequests({
     "rejected",
   ] as const;
   return (
-    <main className="staff-main">
+    <main className="staff-main" id="main-content" tabIndex={-1}>
       {organizationName && roleLabel && signOutAction ? (
         <div className="staff-session">
           <div>
