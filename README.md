@@ -233,4 +233,5 @@ The secret value belongs only in `.env.local` and must never be committed.
 - [Phase 5 manual testing checklist](docs/testing/phase-5-manual-test-checklist.md)
 - [Phase 6 delivery worker checkpoint](docs/testing/phase-6-worker-checkpoint.md)
 - [Phase 7 Core MVP hardening](docs/testing/phase-7-core-mvp-hardening.md)
+- [Phases 1–7 readiness audit](docs/testing/phases-1-to-7-readiness-audit.md)
 - [n8n receiver setup](n8n/README.md)

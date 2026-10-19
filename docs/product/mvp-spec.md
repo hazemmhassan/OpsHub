@@ -796,15 +796,15 @@ and tested.
 
 ## 23. Immediate next action
 
-Do not create application code yet.
+Phases 1 through 7 and the deterministic Core MVP are complete locally. The
+next project checkpoint is Phase 8 planning and should:
 
-The next project checkpoint should:
-
-1. Complete the focused Phase 0 market-validation matrix and record the scope
-   decision.
-2. Treat the four decisions in Section 22 as the approved Phase 1 baseline.
-3. Produce the Arabic and English user flows, low-fidelity screens, request state
-   machine, and integration-delivery state machine.
-4. Define the database schema, RLS model, RPC boundaries, worker behavior,
-   webhook contract, test strategy, and short architecture decision records.
-5. Stop for review before creating the project foundation or application code.
+1. Lock the first AI provider, model, supported Arabic dialects, privacy rules,
+   cost limits, and failure budget before implementation.
+2. Define the fixed-schema conversational intake contract and keep the existing
+   deterministic form available when AI is disabled or unavailable.
+3. Create a versioned Arabic and English evaluation dataset with measurable
+   extraction, grounding, citation, handoff, and fallback criteria.
+4. Define the FastAPI boundary, threat model, observability, and data-retention
+   rules without allowing AI to approve requests or bypass validation.
+5. Stop for review before implementing the Phase 8 service.
