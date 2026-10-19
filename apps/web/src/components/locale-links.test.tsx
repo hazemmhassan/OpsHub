@@ -1,5 +1,15 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import type { ComponentProps } from "react";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("next/link", () => ({
+  default: ({
+    prefetch,
+    ...props
+  }: ComponentProps<"a"> & { prefetch?: boolean }) => (
+    <a data-prefetch={String(prefetch)} {...props} />
+  ),
+}));
 
 import { LocaleLinks } from "./locale-links";
 
@@ -20,6 +30,10 @@ describe("LocaleLinks", () => {
     expect(screen.getByRole("link", { name: "English" })).toHaveAttribute(
       "href",
       "/en/staff",
+    );
+    expect(screen.getByRole("link", { name: "English" })).toHaveAttribute(
+      "data-prefetch",
+      "false",
     );
   });
 });

@@ -24,6 +24,7 @@ export function LocaleLinks({
               href={localizePathname(currentPathname, locale)}
               hrefLang={locale}
               lang={locale}
+              prefetch={false}
             >
               {labels[locale]}
             </Link>

@@ -41,6 +41,16 @@ test("English entry point has secure headers and keyboard navigation", async ({
 
   const accessibility = await new AxeBuilder({ page }).analyze();
   expect(accessibility.violations).toEqual([]);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/ar");
+  await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
 
 test("Arabic mobile company request can be reviewed and approved", async ({

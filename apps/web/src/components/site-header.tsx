@@ -29,9 +29,14 @@ export function SiteHeader({ locale, labels, area }: SiteHeaderProps) {
         <div className="header-inner">
           <Link className="brand" href={`/${locale}`}>
             <span className="brand-mark" aria-hidden="true">
-              O
+              <i />
+              <i />
+              <i />
+              <i />
             </span>
-            <span dir="ltr">{labels.brand}</span>
+            <span dir="ltr" translate="no">
+              {labels.brand}
+            </span>
           </Link>
 
           <div className="header-actions">

@@ -9,10 +9,10 @@ Important details can get lost, approvals become difficult to follow, and a
 failed automation may go unnoticed. OpsHub is designed around these real
 problems and aims to make the whole process easier to manage and trust.
 
-OpsHub is currently in active development. The product and engineering design
-are approved, and the application is being built step by step. The features
-below describe the first release. The request and review workflow is now
-implemented locally, including reliable delivery through n8n to Google Sheets.
+OpsHub is currently being prepared for its first public release. The complete
+request, review, delivery, and optional guided-intake workflow is implemented
+and verified locally. Production hosting and the live AI provider remain
+separate release gates, so this repository does not describe them as deployed.
 
 ## What I want OpsHub to solve
 
@@ -31,6 +31,15 @@ flowchart LR
     D --> F[n8n workflow]
     F --> G[Google Sheets]
 ```
+
+## Product preview
+
+![OpsHub English home page showing the request workflow](docs/assets/screenshots/opshub-home-en.png)
+
+The repository also includes an
+[Arabic mobile preview](docs/assets/screenshots/opshub-home-ar-mobile.png), the
+[public request form](docs/assets/screenshots/opshub-request-en.png), and the
+[Arabic staff sign-in](docs/assets/screenshots/opshub-staff-signin-ar-mobile.png).
 
 ## First release
 
@@ -102,7 +111,8 @@ Exact package versions are locked in the repository manifests.
 - [x] Connect and verify live n8n and Google Sheets delivery
 - [x] Complete security, accessibility, and end to end verification
 - [x] Add and evaluate the optional bilingual AI intake module locally
-- [ ] Prepare the verified project for teams that want to use or adapt it
+- [x] Prepare the deployment design and service materials for team adoption
+- [ ] Deploy and verify the public production environment
 
 ## Current repository stage
 
@@ -131,6 +141,22 @@ while keeping the ordinary form and deterministic submission path in control.
 Its 50-case mock evaluation meets every initial gate. A live OpenAI evaluation
 has not been run because no provider key is configured, so public AI release
 remains blocked until that separate check is completed.
+
+The public experience now has a distinct OpsHub visual system, stronger Arabic
+and English product copy, responsive workflow storytelling, and clear language
+about what the assistant may and may not do. Production container definitions
+are included for the delivery worker and AI service. The public environment has
+not been created yet.
+
+## Project guides
+
+- [Production architecture and deployment plan](docs/architecture/phase-9-production-deployment.md)
+- [Case study](docs/portfolio/opshub-case-study.md)
+- [Three-minute demo script](docs/portfolio/demo-script.md)
+- [Service packages and profile copy](docs/portfolio/service-packages-and-profile-copy.md)
+- [Phase 9 release-readiness evidence](docs/testing/phase-9-release-readiness.md)
+- [Core MVP hardening evidence](docs/testing/phase-7-core-mvp-hardening.md)
+- [AI evaluation and hardening evidence](docs/testing/phase-8d-evaluation-and-hardening.md)
 
 ## Implemented now
 

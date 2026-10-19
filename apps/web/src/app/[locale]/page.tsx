@@ -46,6 +46,37 @@ export default async function HomePage({ params }: HomePageProps) {
           requestAction: home("requestAction"),
           staffAction: home("staffAction"),
           benefits: [home("benefit1"), home("benefit2"), home("benefit3")],
+          workflowEyebrow: home("workflowEyebrow"),
+          workflowTitle: home("workflowTitle"),
+          workflowDescription: home("workflowDescription"),
+          steps: [
+            {
+              title: home("step1Title"),
+              description: home("step1Description"),
+            },
+            {
+              title: home("step2Title"),
+              description: home("step2Description"),
+            },
+            {
+              title: home("step3Title"),
+              description: home("step3Description"),
+            },
+          ],
+          flowTitle: home("flowTitle"),
+          flowSteps: [
+            home("flow1"),
+            home("flow2"),
+            home("flow3"),
+            home("flow4"),
+          ],
+          aiEyebrow: home("aiEyebrow"),
+          aiTitle: home("aiTitle"),
+          aiDescription: home("aiDescription"),
+          aiPoints: [home("aiPoint1"), home("aiPoint2"), home("aiPoint3")],
+          finalTitle: home("finalTitle"),
+          finalDescription: home("finalDescription"),
+          finalAction: home("finalAction"),
         }}
       />
     </div>
