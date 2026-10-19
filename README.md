@@ -50,8 +50,9 @@ I am starting with a focused release that is useful, secure, and testable:
 - Isolation between organizations through PostgreSQL constraints and Row Level
   Security
 
-Public request tracking, notifications, workflow builders, multiple connectors,
-and AI assisted intake are planned for later stages.
+Public request tracking, notifications, workflow builders, and multiple
+connectors are planned for later stages. The optional bilingual AI intake is
+now implemented and evaluated locally behind the existing request form.
 
 ## User roles
 
@@ -71,7 +72,7 @@ and AI assisted intake are planned for later stages.
 | Database and authentication | Supabase, PostgreSQL, Supabase Auth                                |
 | Automation                  | TypeScript worker, n8n Community Edition, Google Sheets            |
 | Testing                     | Vitest, React Testing Library, Playwright, Supabase database tests |
-| Later AI module             | FastAPI, Pydantic, evaluated bilingual RAG intake                  |
+| Optional AI intake          | FastAPI, Pydantic, evaluated bilingual retrieval-assisted intake  |
 
 Exact package versions are locked in the repository manifests.
 
@@ -100,7 +101,7 @@ Exact package versions are locked in the repository manifests.
 - [x] Implement the reliable database queue and signed delivery worker
 - [x] Connect and verify live n8n and Google Sheets delivery
 - [x] Complete security, accessibility, and end to end verification
-- [ ] Add and evaluate the optional bilingual AI intake module
+- [x] Add and evaluate the optional bilingual AI intake module locally
 - [ ] Prepare the verified project for teams that want to use or adapt it
 
 ## Current repository stage
@@ -123,6 +124,13 @@ worker, and n8n contract suites together with database linting, accessibility
 scans, TypeScript, formatting, production dependency audits, and production
 builds. The clean local database rebuild and complete evidence matrix are
 recorded in the Phase 7 hardening report.
+
+The optional AI intake is also implemented locally. It supports English,
+Modern Standard Arabic, Egyptian Arabic, and mixed-language synthetic cases,
+while keeping the ordinary form and deterministic submission path in control.
+Its 50-case mock evaluation meets every initial gate. A live OpenAI evaluation
+has not been run because no provider key is configured, so public AI release
+remains blocked until that separate check is completed.
 
 ## Implemented now
 
@@ -164,6 +172,12 @@ The current local application includes:
 - Automated English and Arabic browser journeys with mobile, keyboard,
   accessibility, security-header, and cleanup checks
 - Security response headers and private no-store caching for staff pages
+- An optional Arabic and English intake assistant behind a same-origin server
+  boundary, with retrieved citations and editable field proposals
+- Signed short-lived AI sessions, a 12-turn session limit, a 20-turn per-subject
+  rate limit, bounded provider input and output, and fixed-form fallback
+- A 50-case synthetic AI evaluation covering English, Modern Standard Arabic,
+  Egyptian Arabic, mixed language, grounding, ambiguity, safety, and failure
 
 The live Google credential remains only in the local n8n credential store, and
 the destination spreadsheet settings remain in the ignored local environment.
@@ -234,4 +248,6 @@ The secret value belongs only in `.env.local` and must never be committed.
 - [Phase 6 delivery worker checkpoint](docs/testing/phase-6-worker-checkpoint.md)
 - [Phase 7 Core MVP hardening](docs/testing/phase-7-core-mvp-hardening.md)
 - [Phases 1–7 readiness audit](docs/testing/phases-1-to-7-readiness-audit.md)
+- [Phase 8 AI intake design](docs/architecture/phase-8-ai-intake-design.md)
+- [Phase 8D evaluation and hardening](docs/testing/phase-8d-evaluation-and-hardening.md)
 - [n8n receiver setup](n8n/README.md)

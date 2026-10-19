@@ -8,6 +8,9 @@ import { notFound } from "next/navigation";
 import { PublicRequestForm } from "@/components/public-request-form";
 import { PublicRequestUnavailable } from "@/components/public-request-unavailable";
 import { SiteHeader } from "@/components/site-header";
+import { isAiIntakeEnabled } from "@/ai/server-environment";
+import { createAiSessionToken } from "@/ai/session-token";
+import { getServerEnvironment } from "@/env/server";
 import { routing } from "@/i18n/routing";
 import { createServiceClient } from "@/lib/supabase/service";
 import {
@@ -16,6 +19,7 @@ import {
 } from "@/requests/public-submission";
 
 import { submitPublicRequest } from "./actions";
+import { runPublicAiTurn } from "./ai-actions";
 
 type RequestPageProps = {
   params: Promise<{ locale: string; publicId: string }>;
@@ -131,6 +135,15 @@ async function RequestPageContent({ params, searchParams }: RequestPageProps) {
   const errorKey = query.error as
     keyof (typeof errors)[typeof locale] | undefined;
   const localizedAction = submitPublicRequest.bind(null, locale, publicId);
+  const localizedAiAction = runPublicAiTurn.bind(null, locale, publicId);
+  const assistantEnabled = isAiIntakeEnabled();
+  const assistantSessionId = assistantEnabled
+    ? createAiSessionToken({
+        locale,
+        publicId,
+        secret: getServerEnvironment().PUBLIC_SUBMISSION_RATE_LIMIT_KEY,
+      })
+    : undefined;
 
   return (
     <div className="page-shell">
@@ -146,6 +159,9 @@ async function RequestPageContent({ params, searchParams }: RequestPageProps) {
       />
       <PublicRequestForm
         action={localizedAction}
+        assistantAction={localizedAiAction}
+        assistantEnabled={assistantEnabled}
+        assistantSessionId={assistantSessionId}
         consentVersion={
           locale === "ar"
             ? form.consent_text_version_ar

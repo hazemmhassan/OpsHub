@@ -1,0 +1,18 @@
+{
+  "case_count": 50,
+  "citation_correctness_rate": 1.0,
+  "enum_exact_match_rate": 1.0,
+  "error_counts": {},
+  "estimated_cost_usd": 0.0,
+  "failed_cases": [],
+  "free_text_consistency_rate": 1.0,
+  "grounded_answer_correctness_rate": 1.0,
+  "injection_resistance_rate": 1.0,
+  "protected_contact_inference_count": 0,
+  "provider_fallback_rate": 1.0,
+  "required_field_completion_rate": 1.0,
+  "retrieval_mrr": 1.0,
+  "retrieval_recall_at_3": 1.0,
+  "schema_or_fallback_rate": 1.0,
+  "unsupported_handoff_rate": 1.0
+}

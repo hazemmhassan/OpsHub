@@ -7,16 +7,22 @@ import arCountries from "i18n-iso-countries/langs/ar.json";
 import enCountries from "i18n-iso-countries/langs/en.json";
 
 import type { AppLocale } from "@/i18n/locale";
+import type { AiTurnInput, AiTurnResponse } from "@/ai/contracts";
 import {
   getPhoneCountryMismatch,
   parseRequestInput,
 } from "@/requests/request-input";
+
+import { AiIntakeAssistant } from "./ai-intake-assistant";
 
 countries.registerLocale(arCountries);
 countries.registerLocale(enCountries);
 
 type PublicRequestFormProps = {
   action: (formData: FormData) => void | Promise<void>;
+  assistantAction?: (input: AiTurnInput) => Promise<AiTurnResponse>;
+  assistantEnabled?: boolean;
+  assistantSessionId?: string;
   consentVersion: string;
   locale: AppLocale;
   organizationDate: string;
@@ -90,6 +96,9 @@ const categoryOptions = [
 
 export function PublicRequestForm({
   action,
+  assistantAction,
+  assistantEnabled = false,
+  assistantSessionId,
   consentVersion,
   locale,
   organizationDate,
@@ -100,10 +109,17 @@ export function PublicRequestForm({
   const [requesterType, setRequesterType] = useState<"individual" | "company">(
     "individual",
   );
+  const formRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState<string | null>(null);
   const errorRef = useRef<HTMLParagraphElement>(null);
   const [phone, setPhone] = useState("");
   const [countryCode, setCountryCode] = useState("EG");
+  const [serviceCategory, setServiceCategory] = useState("consulting");
+  const [requestTitle, setRequestTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [jobTitle, setJobTitle] = useState("");
+  const [companyWebsite, setCompanyWebsite] = useState("");
   const [idempotencyKey] = useState(() => crypto.randomUUID());
   const names = countries.getNames(locale, { select: "official" });
   const priority = new Map(
@@ -154,14 +170,75 @@ export function PublicRequestForm({
     }
   }
 
+  function buildAiInput(
+    latestMessage: string,
+    turnNumber: number,
+    sessionId: string,
+  ): AiTurnInput {
+    const data = new FormData(formRef.current ?? undefined);
+    const completedFields: AiTurnInput["completedFields"] = [];
+    for (const [formField, aiField] of [
+      ["contactName", "contact_name"],
+      ["email", "email"],
+      ["phone", "phone"],
+      ["countryCode", "country"],
+    ] as const) {
+      if (String(data.get(formField) ?? "").trim())
+        completedFields.push(aiField);
+    }
+    if (data.get("consent") === "on") completedFields.push("consent");
+
+    return {
+      sessionId,
+      turnNumber,
+      latestMessage,
+      draft: {
+        requester_type: requesterType,
+        service_category:
+          serviceCategory as AiTurnInput["draft"]["service_category"],
+        request_title: requestTitle || null,
+        description: description || null,
+        company_name: requesterType === "company" ? companyName || null : null,
+        job_title: requesterType === "company" ? jobTitle || null : null,
+        company_website:
+          requesterType === "company" ? companyWebsite || null : null,
+      },
+      completedFields,
+    };
+  }
+
+  function applyAiPatch(patch: AiTurnResponse["draft_patch"]) {
+    if (patch.requester_type) setRequesterType(patch.requester_type);
+    if (patch.service_category) setServiceCategory(patch.service_category);
+    if (patch.request_title) setRequestTitle(patch.request_title);
+    if (patch.description) setDescription(patch.description);
+    if (patch.company_name) setCompanyName(patch.company_name);
+    if (patch.job_title) setJobTitle(patch.job_title);
+    if (patch.company_website) setCompanyWebsite(patch.company_website);
+  }
+
   return (
     <main className="request-form-shell" id="main-content" tabIndex={-1}>
-      <form action={action} className="request-form" onSubmit={validate}>
+      <form
+        ref={formRef}
+        action={action}
+        className="request-form"
+        onSubmit={validate}
+      >
         <header>
           <p className="eyebrow">OpsHub</p>
           <h1>{copy.title}</h1>
           <p>{copy.intro}</p>
         </header>
+        {assistantEnabled && assistantAction && assistantSessionId ? (
+          <AiIntakeAssistant
+            action={assistantAction}
+            buildInput={buildAiInput}
+            locale={locale}
+            onPatch={applyAiPatch}
+            sessionId={assistantSessionId}
+          />
+        ) : null}
         {error || serverError ? (
           <p ref={errorRef} role="alert" className="form-error" tabIndex={-1}>
             {error ?? serverError}
@@ -263,7 +340,12 @@ export function PublicRequestForm({
         </label>
         <label>
           {copy.category}
-          <select name="serviceCategory" required defaultValue="consulting">
+          <select
+            name="serviceCategory"
+            required
+            value={serviceCategory}
+            onChange={(event) => setServiceCategory(event.target.value)}
+          >
             {categoryOptions.map(([value, en, ar]) => (
               <option key={value} value={value}>
                 {locale === "ar" ? ar : en}
@@ -273,7 +355,14 @@ export function PublicRequestForm({
         </label>
         <label>
           {copy.requestTitle}
-          <input name="requestTitle" required minLength={5} maxLength={120} />
+          <input
+            name="requestTitle"
+            required
+            minLength={5}
+            maxLength={120}
+            value={requestTitle}
+            onChange={(event) => setRequestTitle(event.target.value)}
+          />
         </label>
         <label htmlFor="request-description">{copy.description}</label>
         <textarea
@@ -282,6 +371,8 @@ export function PublicRequestForm({
           required
           minLength={20}
           maxLength={2000}
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
         />
         <small>{copy.sensitive}</small>
         <label>
@@ -305,6 +396,8 @@ export function PublicRequestForm({
                 name="companyName"
                 required
                 maxLength={160}
+                value={companyName}
+                onChange={(event) => setCompanyName(event.target.value)}
               />
             </label>
             <label>
@@ -313,6 +406,8 @@ export function PublicRequestForm({
                 autoComplete="organization-title"
                 name="jobTitle"
                 maxLength={120}
+                value={jobTitle}
+                onChange={(event) => setJobTitle(event.target.value)}
               />
             </label>
             <label>
@@ -323,6 +418,8 @@ export function PublicRequestForm({
                 name="companyWebsite"
                 maxLength={2048}
                 dir="ltr"
+                value={companyWebsite}
+                onChange={(event) => setCompanyWebsite(event.target.value)}
               />
             </label>
           </div>

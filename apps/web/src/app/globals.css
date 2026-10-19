@@ -899,6 +899,74 @@ h2 {
   font-weight: 800;
 }
 
+.assistant-open {
+  inline-size: fit-content;
+  min-block-size: 2.8rem;
+  padding-inline: 1rem;
+  border: 1px solid var(--brand);
+  border-radius: 999px;
+  background: #e9f3f0;
+  color: var(--brand-deep);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+}
+
+.assistant-panel {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid color-mix(in srgb, var(--brand) 35%, var(--line));
+  border-radius: 1rem;
+  background: color-mix(in srgb, #e9f3f0 45%, white);
+}
+
+.assistant-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.assistant-heading h2,
+.assistant-heading p,
+.assistant-notice,
+.assistant-response p {
+  margin: 0;
+}
+
+.assistant-notice {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.assistant-response {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-inline-start: 3px solid var(--brand);
+  border-radius: 0.6rem;
+  background: white;
+}
+
+.assistant-response small {
+  color: var(--muted);
+}
+
+.assistant-panel textarea {
+  min-block-size: 7rem;
+}
+
+.assistant-panel .secondary-action {
+  inline-size: fit-content;
+}
+
+.assistant-panel .secondary-action:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .staff-loading-mark {
   display: flex;
   align-items: end;

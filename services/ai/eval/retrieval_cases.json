@@ -1,0 +1,14 @@
+[
+  {"query":"Can you help map our current process?","relevant":["consulting.en.scope"]},
+  {"query":"هل تقدمون استشارات ضريبية؟","relevant":["consulting.ar.نطاق-الخدمة"]},
+  {"query":"We need an internal tool and system integration","relevant":["it-software.en.scope"]},
+  {"query":"نحتاج أتمتة سير العمل وربط الأنظمة","relevant":["it-software.ar.نطاق-الخدمة"]},
+  {"query":"Does marketing include audience research?","relevant":["marketing.en.scope"]},
+  {"query":"هل ميزانية الإعلانات ضمن الخدمة؟","relevant":["marketing.ar.نطاق-الخدمة"]},
+  {"query":"What details are needed for a team workshop?","relevant":["training.en.scope"]},
+  {"query":"ما المعلومات المطلوبة لتدريب الفريق؟","relevant":["training.ar.نطاق-الخدمة"]},
+  {"query":"Do you provide always-on urgent support?","relevant":["support-maintenance.en.scope"]},
+  {"query":"هل تشمل الصيانة تحديثات دورية؟","relevant":["support-maintenance.ar.نطاق-الخدمة"]},
+  {"query":"Can I track status with the public reference?","relevant":["request-process.en.review-and-contact"]},
+  {"query":"هل يمكن تتبع حالة الطلب بالرقم المرجعي؟","relevant":["request-process.ar.المراجعة-والتواصل"]}
+]
