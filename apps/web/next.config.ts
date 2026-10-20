@@ -38,6 +38,7 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   agentRules: false,
   allowedDevOrigins: ["127.0.0.1"],
+  output: "standalone",
   env: {
     NEXT_PUBLIC_APP_URL: env.NEXT_PUBLIC_APP_URL,
   },

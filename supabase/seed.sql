@@ -31,7 +31,7 @@ insert into public.public_forms (
 values (
   '00000000-0000-4000-8000-000000000011',
   '00000000-0000-4000-8000-000000000001',
-  'opshub-demo-request-form',
+  'opshub-service-request',
   1,
   'consent-ar-v1',
   'consent-en-v1',

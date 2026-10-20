@@ -33,7 +33,7 @@ type PublicHomeProps = {
   };
 };
 
-const requestPath = "request/opshub-demo-request-form";
+const requestPath = "request/opshub-service-request";
 
 export function PublicHome({ locale, copy }: PublicHomeProps) {
   const localizedRequestPath = `/${locale}/${requestPath}`;

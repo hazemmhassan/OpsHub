@@ -1,0 +1,9 @@
+.env
+.env.*
+.next
+.playwright-cli
+node_modules
+coverage
+e2e
+scripts
+*.tsbuildinfo

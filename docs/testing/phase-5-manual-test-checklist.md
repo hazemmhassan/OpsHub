@@ -12,7 +12,7 @@ to n8n and Google Sheets.
 
 ## 1. Public English individual request
 
-1. Open `/en/request/opshub-demo-request-form`.
+1. Open `/en/request/opshub-service-request`.
 2. Keep **Individual** selected.
 3. Enter a valid Egyptian phone number. Arabic-Indic digits such as
    `٠١٠١٢٣٤٥٦٧٨` should also work.
@@ -28,7 +28,7 @@ Expected result:
 
 ## 2. Public Arabic company request
 
-1. Open `/ar/request/opshub-demo-request-form`.
+1. Open `/ar/request/opshub-service-request`.
 2. Confirm that the layout direction is right to left.
 3. Select **شركة**.
 4. Confirm that company name, job title, and company website appear.

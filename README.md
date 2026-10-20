@@ -151,6 +151,8 @@ not been created yet.
 ## Project guides
 
 - [Production architecture and deployment plan](docs/architecture/phase-9-production-deployment.md)
+- [Zero-cost demo setup](docs/deployment/zero-cost-demo-setup.md)
+- [Zero-cost demo preflight](docs/testing/zero-cost-demo-preflight.md)
 - [Case study](docs/portfolio/opshub-case-study.md)
 - [Three-minute demo script](docs/portfolio/demo-script.md)
 - [Service packages and profile copy](docs/portfolio/service-packages-and-profile-copy.md)

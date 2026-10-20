@@ -9,7 +9,7 @@ test.skip(
 test("optional AI intake works in English and Arabic without replacing the form", async ({
   page,
 }) => {
-  await page.goto("/en/request/opshub-demo-request-form");
+  await page.goto("/en/request/opshub-service-request");
   await expect(page.locator("html")).toHaveAttribute("dir", "ltr");
 
   const openEnglish = page.getByRole("button", { name: "Use the assistant" });
@@ -37,7 +37,7 @@ test("optional AI intake works in English and Arabic without replacing the form"
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/ar/request/opshub-demo-request-form");
+  await page.goto("/ar/request/opshub-service-request");
   await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
   await page.getByRole("button", { name: "استخدام المساعد" }).click();
   await page

@@ -57,7 +57,7 @@ test("Arabic mobile company request can be reviewed and approved", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/ar/request/opshub-demo-request-form");
+  await page.goto("/ar/request/opshub-service-request");
 
   await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
   expect(

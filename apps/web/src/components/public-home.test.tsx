@@ -83,12 +83,12 @@ describe("PublicHome", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "Start a request" }),
-    ).toHaveAttribute("href", "/en/request/opshub-demo-request-form");
+    ).toHaveAttribute("href", "/en/request/opshub-service-request");
     expect(
       screen.getByRole("link", { name: "Open team workspace" }),
     ).toHaveAttribute("href", "/en/staff");
     expect(
       screen.getByRole("link", { name: "Try the request flow" }),
-    ).toHaveAttribute("href", "/en/request/opshub-demo-request-form");
+    ).toHaveAttribute("href", "/en/request/opshub-service-request");
   });
 });

@@ -28,7 +28,7 @@ npm run dev
 Then open [http://localhost:3000](http://localhost:3000).
 
 The demo public form is available at
-[http://localhost:3000/en/request/opshub-demo-request-form](http://localhost:3000/en/request/opshub-demo-request-form)
+[http://localhost:3000/en/request/opshub-service-request](http://localhost:3000/en/request/opshub-service-request)
 and has an Arabic version under `/ar`.
 
 ## Local staff sign-in

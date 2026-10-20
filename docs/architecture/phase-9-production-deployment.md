@@ -4,6 +4,12 @@
 **Reviewed:** 19 October 2026  
 **Scope:** Web, Supabase, delivery worker, n8n, Google Sheets, and optional AI
 
+Hazem selected the strict zero-cost demo profile on 20 October 2026. The
+executable setup checklist is in
+[`../deployment/zero-cost-demo-setup.md`](../deployment/zero-cost-demo-setup.md).
+This profile is temporary and shareable, but it is not an always-on production
+deployment.
+
 ## 1. Production shape
 
 ```mermaid
@@ -123,4 +129,3 @@ before purchase or deployment:
 - [Render free service limitations](https://render.com/docs/free)
 - [Railway plans](https://docs.railway.com/pricing/plans)
 - [n8n Cloud pricing](https://n8n.io/pricing/)
-
