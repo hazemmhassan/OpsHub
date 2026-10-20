@@ -7,7 +7,9 @@
 **Prepared:** 20 October 2026
 
 **Current state:** The application and its production-style containers are
-verified locally. No paid account or public resource has been created.
+verified locally. A temporary HTTPS demo and complete synthetic smoke test
+passed on 20 October 2026. No paid account or permanent public resource was
+created.
 
 ## 1. Purpose
 
@@ -23,14 +25,14 @@ client calls. It is not described as an always-on production deployment.
 
 ## 2. Demo layout
 
-| Component | Location | Public? |
-| --- | --- | --- |
-| Next.js web application | Hazem's computer | Through the temporary tunnel |
-| PostgreSQL and authentication | Local Supabase containers | No |
-| Delivery worker | Hazem's computer | No |
-| n8n and its persistent local volume | Local Docker | No |
-| Google Sheets | Hazem's private Google account | Only through the existing n8n credential |
-| Optional AI service | Hazem's computer, mock mode | No |
+| Component                           | Location                       | Public?                                  |
+| ----------------------------------- | ------------------------------ | ---------------------------------------- |
+| Next.js web application             | Hazem's computer               | Through the temporary tunnel             |
+| PostgreSQL and authentication       | Local Supabase containers      | No                                       |
+| Delivery worker                     | Hazem's computer               | No                                       |
+| n8n and its persistent local volume | Local Docker                   | No                                       |
+| Google Sheets                       | Hazem's private Google account | Only through the existing n8n credential |
+| Optional AI service                 | Hazem's computer, mock mode    | No                                       |
 
 Only the web application needs a tunnel. The worker can call the local n8n
 webhook directly, and n8n makes the outbound Google Sheets request.

@@ -55,8 +55,13 @@ reference, demonstrating receiver-side idempotency.
 
 The optional assistant passed a 50-case synthetic mock evaluation covering
 English, Modern Standard Arabic, Egyptian Arabic, mixed language, grounding,
-ambiguity, safety, and provider failure. A live model-provider evaluation and a
-public production deployment have not yet been completed.
+ambiguity, safety, and provider failure. A live model-provider evaluation has
+not been completed.
+
+A temporary public HTTPS demo also passed a synthetic request-to-delivery
+smoke test. It runs from the local stack and is available only while the local
+machine and tunnel are running, so it is evidence of a shareable demonstration,
+not an always-on production deployment.
 
 ## Result
 
@@ -72,6 +77,5 @@ small operational workflow and the evidence showing how that boundary behaves.
 - the Core MVP has one form, one approval step, and one Sheets destination
 - staff contact requesters manually
 - the AI assistant is optional and not approved for public provider use yet
-- production hosting, monitoring, backup rehearsal, and live smoke testing are
-  still deployment gates
-
+- permanent hosting, production monitoring, and backup rehearsal remain
+  environment-specific deployment work

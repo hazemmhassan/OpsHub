@@ -4,9 +4,9 @@ This private FastAPI service is the optional AI boundary for OpsHub intake. It
 does not replace the existing form or submission workflow. The browser reaches
 it through the same-origin Next.js server boundary, never directly.
 
-Checkpoints 8B and 8C provide the service foundation, bilingual lexical
-retrieval, deterministic field-state logic, and the requester assistant.
-Live-provider evaluation and release hardening belong to Checkpoint 8D.
+Checkpoints 8B through 8D provide the service foundation, bilingual lexical
+retrieval, deterministic field-state logic, requester assistant, evaluation,
+and release hardening.
 
 ## What is available
 

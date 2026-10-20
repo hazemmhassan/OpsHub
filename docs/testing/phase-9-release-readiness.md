@@ -1,8 +1,12 @@
 # OpsHub Phase 9 Release Readiness
 
-**Status:** Local release package complete; public release not yet approved or
-deployed  
-**Verified:** 19 October 2026
+**Status:** Local release package complete; temporary public demo verified
+
+**Verified:** 20 October 2026
+
+> This report records the Phase 9 release checkpoint. The later zero-cost demo
+> verification is summarized below and documented fully in
+> [zero-cost-demo-preflight.md](zero-cost-demo-preflight.md).
 
 ## What Phase 9 added
 
@@ -30,23 +34,23 @@ page was reopened and reported zero console errors.
 
 ## Final local evidence
 
-| Area | Result |
-| --- | --- |
-| PostgreSQL and tenant isolation | 182 pgTAP assertions passed across 11 files |
-| Database lint | No schema errors |
-| Web unit and component tests | 59 passed across 22 files |
-| Web static checks | TypeScript, ESLint, and Prettier passed |
-| Web production build | Passed; 33 pages generated |
-| Core browser journey | 2 passed in Chromium; 1 provider-gated AI journey skipped |
-| Accessibility | No axe violations on tested English and Arabic public, form, and staff screens |
-| Responsive behavior | Arabic landing and request flow passed 390 by 844 overflow checks |
-| Delivery worker | 54 passed; 1 environment-gated integration test skipped; typecheck, format, and build passed |
-| n8n | 6 contract tests passed; Compose config and pinned workflow import passed |
-| AI service | 39 Pytest tests, Ruff, strict Mypy, and `pip check` passed |
-| Deployment images | Worker and AI images built; both use non-root users |
-| AI container smoke | `/health` and `/ready` passed with deterministic mock provider |
-| Production dependency audits | Root, web, and worker reported 0 known vulnerabilities |
-| Browser bundle scan | No server-only variable names or configured secret values found |
+| Area                            | Result                                                                                       |
+| ------------------------------- | -------------------------------------------------------------------------------------------- |
+| PostgreSQL and tenant isolation | 182 pgTAP assertions passed across 11 files                                                  |
+| Database lint                   | No schema errors                                                                             |
+| Web unit and component tests    | 59 passed across 22 files                                                                    |
+| Web static checks               | TypeScript, ESLint, and Prettier passed                                                      |
+| Web production build            | Passed; 33 pages generated                                                                   |
+| Core browser journey            | 2 passed in Chromium; 1 provider-gated AI journey skipped                                    |
+| Accessibility                   | No axe violations on tested English and Arabic public, form, and staff screens               |
+| Responsive behavior             | Arabic landing and request flow passed 390 by 844 overflow checks                            |
+| Delivery worker                 | 54 passed; 1 environment-gated integration test skipped; typecheck, format, and build passed |
+| n8n                             | 6 contract tests passed; Compose config and pinned workflow import passed                    |
+| AI service                      | 39 Pytest tests, Ruff, strict Mypy, and `pip check` passed                                   |
+| Deployment images               | Worker and AI images built; both use non-root users                                          |
+| AI container smoke              | `/health` and `/ready` passed with deterministic mock provider                               |
+| Production dependency audits    | Root, web, and worker reported 0 known vulnerabilities                                       |
+| Browser bundle scan             | No server-only variable names or configured secret values found                              |
 
 The browser suite created only synthetic data and completed its registered
 cleanup. The live Google Sheets result from Phase 6 was not repeated because it
@@ -67,19 +71,29 @@ depends on the developer's private Google credential.
 - local Google Sheets append-then-update evidence using one stable reference
 - deterministic 50-case mock AI evaluation
 - production container images build and the AI image passes local readiness
+- temporary public demo verified with synthetic data while the local stack and
+  tunnel are running
 
 ## Claims not allowed yet
 
-- publicly deployed, production-ready, or used by active clients
+- permanently deployed, production-ready, or used by active clients
 - always-on worker or n8n hosting
 - production backup, restore, uptime, or incident-response evidence
 - live-provider AI quality, latency, or cost
 - public customer volume, conversion, time savings, or reliability metrics
 
-## Remaining release gates
+## Temporary public demo evidence
 
-1. Hazem selects and approves the portfolio-preview or client-ready hosting
-   profile and any paid services.
+On 20 October 2026, the zero-cost demo profile passed route, security-header,
+and complete synthetic request-to-delivery smoke checks through a temporary
+Cloudflare Quick Tunnel. The disposable staff account and exact local database
+records were removed afterward. The URL is temporary and does not represent an
+always-on service.
+
+## Remaining production gates
+
+1. A team selects and approves its permanent hosting profile and any paid
+   services.
 2. Hazem provides or configures the required hosting projects, domain, and
    secret stores without sharing secrets in chat or Git.
 3. The committed migrations, n8n workflow, worker, web app, and optional AI
@@ -91,6 +105,6 @@ depends on the developer's private Google credential.
 7. The demo script is recorded, reviewed for hidden credentials or personal
    data, captioned, and published.
 
-Until those gates pass, the repository is locally release-ready and packaged
-for review, but the project is not described as a live production service.
-
+Until those gates pass, the repository is locally release-ready and can be
+shared as a temporary demo, but the project is not described as a live
+production service.

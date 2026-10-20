@@ -1,14 +1,16 @@
 # OpsHub Phase 9 Production Deployment
 
-**Status:** Deployment-ready design; no public environment has been created  
-**Reviewed:** 19 October 2026  
+**Status:** Deployment-ready design; temporary public demo verified
+
+**Reviewed:** 20 October 2026
+
 **Scope:** Web, Supabase, delivery worker, n8n, Google Sheets, and optional AI
 
 Hazem selected the strict zero-cost demo profile on 20 October 2026. The
 executable setup checklist is in
 [`../deployment/zero-cost-demo-setup.md`](../deployment/zero-cost-demo-setup.md).
-This profile is temporary and shareable, but it is not an always-on production
-deployment.
+This profile passed a synthetic public smoke test on 20 October 2026. It is
+temporary and shareable, but it is not an always-on production deployment.
 
 ## 1. Production shape
 
@@ -63,13 +65,13 @@ or self-hosted.
 
 ## 3. Environment boundaries
 
-| Component | Public input | Private credentials | Persistent state |
-| --- | --- | --- | --- |
-| Web | locale, form values, staff browser session | Supabase secret key, submission rate-limit key, AI internal key | none outside Supabase |
-| Supabase | authenticated and anonymous API requests | project database and JWT secrets | requests, decisions, audit, deliveries, rate limits |
-| Worker | none | Supabase secret key, webhook URL, HMAC secret | delivery state in Supabase |
-| n8n | signed OpsHub webhook | n8n encryption key, Google OAuth credential, HMAC secret | workflow and credential store |
-| AI service | same-origin web server calls only | AI internal key, optional provider key | no authoritative request state |
+| Component  | Public input                               | Private credentials                                             | Persistent state                                    |
+| ---------- | ------------------------------------------ | --------------------------------------------------------------- | --------------------------------------------------- |
+| Web        | locale, form values, staff browser session | Supabase secret key, submission rate-limit key, AI internal key | none outside Supabase                               |
+| Supabase   | authenticated and anonymous API requests   | project database and JWT secrets                                | requests, decisions, audit, deliveries, rate limits |
+| Worker     | none                                       | Supabase secret key, webhook URL, HMAC secret                   | delivery state in Supabase                          |
+| n8n        | signed OpsHub webhook                      | n8n encryption key, Google OAuth credential, HMAC secret        | workflow and credential store                       |
+| AI service | same-origin web server calls only          | AI internal key, optional provider key                          | no authoritative request state                      |
 
 Secrets must be unique per environment, held in the hosting secret store, and
 rotated after any exposure. Browser-visible variables are limited to the
